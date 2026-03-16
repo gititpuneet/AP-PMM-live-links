@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Master Flow — Enrichment + Targeting + Exclusion | Alternative Payments</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;padding:36px 20px}
+    h1{text-align:center;font-size:22px;font-weight:700;color:#1a202c;margin-bottom:4px}
+    .subtitle{text-align:center;font-size:12px;color:#718096;margin-bottom:4px}
+    .version{text-align:center;font-size:11px;color:#a0aec0;margin-bottom:28px}
+    .svg-wrap{max-width:1520px;margin:0 auto;background:white;border-radius:14px;box-shadow:0 2px 14px rgba(0,0,0,.09);overflow-x:auto}
+    svg text{font-family:'Segoe UI',system-ui,sans-serif}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;max-width:1520px;margin:24px auto 0}
+    .card{background:white;border-radius:11px;padding:16px 18px;box-shadow:0 1px 5px rgba(0,0,0,.07)}
+    .card .step{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .card p{font-size:11.5px;color:#4a5568;line-height:1.65}
+    .card code{background:#edf2f7;padding:1px 5px;border-radius:3px;font-size:10.5px}
+    footer{text-align:center;font-size:10px;color:#a0aec0;margin-top:20px;padding-bottom:16px}
+  </style>
+</head>
+<body>
+
+<h1>Master Flow — Personal Email Enrichment + Ad Targeting + Deal Exclusion</h1>
+<p class="subtitle">Clay → RocketReach → HubSpot → Salesforce · HubSpot Native Sync + Stape.io CAPI → Meta &amp; Google &amp; LinkedIn</p>
+<p class="version">v2.0 · March 2026 · Alternative Payments · Internal &amp; Confidential</p>
+
+<div class="svg-wrap">
+<svg viewBox="0 0 1520 2520" xmlns="http://www.w3.org/2000/svg" width="1520" height="2520">
+<defs>
+  <marker id="arr"      markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#94a3b8"/></marker>
+  <marker id="arr-grn"  markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#48bb78"/></marker>
+  <marker id="arr-red"  markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#fc8181"/></marker>
+  <marker id="arr-pur"  markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#9f7aea"/></marker>
+  <marker id="arr-blue" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#4299e1"/></marker>
+  <marker id="arr-org"  markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#ed8936"/></marker>
+  <marker id="arr-pink" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#ed64a6"/></marker>
+  <marker id="arr-teal" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L10,3.5 z" fill="#38b2ac"/></marker>
+</defs>
+
+<!-- ═══════════════════════════════════════════
+     LANE 1: ENRICHMENT SOURCE (Clay + RocketReach)
+═══════════════════════════════════════════ -->
+<rect x="0" y="0" width="1520" height="340" fill="#f5f0ff"/>
+<line x1="0" y1="340" x2="1520" y2="340" stroke="#dde6f0" stroke-width="1.2"/>
+<line x1="52" y1="0" x2="52" y2="2520" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,170)" x="26" y="170" font-size="8" font-weight="700" fill="#6b46c1" letter-spacing="1.5" text-anchor="middle">ENRICHMENT</text>
+
+<!-- Clay Source -->
+<rect x="580" y="16" width="360" height="64" rx="10" fill="#e9d8fd" stroke="#b794f4" stroke-width="2"/>
+<text x="760" y="42" font-size="14" font-weight="700" fill="#44337a" text-anchor="middle">CLAY: Find People Table</text>
+<text x="760" y="60" font-size="10" fill="#6b46c1" text-anchor="middle">32,277 contacts — Full list · No pre-filters</text>
+
+<!-- Arrow: Clay → RocketReach -->
+<line x1="760" y1="80" x2="760" y2="100" stroke="#9f7aea" stroke-width="2" marker-end="url(#arr-pur)"/>
+
+<!-- RocketReach -->
+<rect x="540" y="100" width="440" height="50" rx="10" fill="#e9d8fd" stroke="#b794f4" stroke-width="2"/>
+<text x="760" y="123" font-size="12" font-weight="700" fill="#44337a" text-anchor="middle">ROCKETREACH API — Personal Email Lookup</text>
+<text x="760" y="140" font-size="10" fill="#6b46c1" text-anchor="middle">Inputs: First Name + Last Name + Work Domain → Returns personal email</text>
+
+<!-- Arrow: RocketReach → Results -->
+<line x1="760" y1="150" x2="760" y2="170" stroke="#9f7aea" stroke-width="2" marker-end="url(#arr-pur)"/>
+
+<!-- Result diamond -->
+<polygon points="760,175 860,210 760,245 660,210" fill="#f5f0ff" stroke="#9f7aea" stroke-width="2"/>
+<text x="760" y="214" font-size="10" font-weight="700" fill="#44337a" text-anchor="middle">Result?</text>
+
+<!-- Found path -->
+<line x1="660" y1="210" x2="350" y2="210" stroke="#48bb78" stroke-width="2" marker-end="url(#arr-grn)"/>
+<text x="500" y="202" font-size="9" font-weight="700" fill="#22543d" text-anchor="middle">Found</text>
+<rect x="140" y="192" width="210" height="36" rx="7" fill="#c6f6d5" stroke="#48bb78" stroke-width="1.5"/>
+<text x="245" y="215" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">personal_email = result</text>
+
+<!-- Multiple path -->
+<line x1="860" y1="210" x2="1100" y2="210" stroke="#48bb78" stroke-width="2" marker-end="url(#arr-grn)"/>
+<text x="980" y="202" font-size="9" font-weight="700" fill="#22543d" text-anchor="middle">Multiple</text>
+<rect x="1100" y="192" width="330" height="36" rx="7" fill="#c6f6d5" stroke="#48bb78" stroke-width="1.5"/>
+<text x="1265" y="215" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">personal_email = best · alt stored</text>
+
+<!-- Not Found path (down-left) -->
+<path d="M 710,245 L 350,290" fill="none" stroke="#a0aec0" stroke-width="1.8" marker-end="url(#arr)"/>
+<text x="490" y="262" font-size="9" fill="#718096">Not Found</text>
+<rect x="140" y="272" width="210" height="48" rx="7" fill="#edf2f7" stroke="#a0aec0" stroke-width="1.5"/>
+<text x="245" y="292" font-size="10" fill="#4a5568" text-anchor="middle">Phase 2 Fallback</text>
+<text x="245" y="308" font-size="9" fill="#718096" text-anchor="middle">Datagma → Clearbit → not_found</text>
+
+<!-- Error path (down-right) -->
+<path d="M 810,245 L 1180,290" fill="none" stroke="#a0aec0" stroke-width="1.8" marker-end="url(#arr)"/>
+<text x="1020" y="262" font-size="9" fill="#718096">API Error</text>
+<rect x="1100" y="272" width="330" height="48" rx="7" fill="#edf2f7" stroke="#a0aec0" stroke-width="1.5"/>
+<text x="1265" y="292" font-size="10" fill="#4a5568" text-anchor="middle">Retry next monthly cycle</text>
+<text x="1265" y="308" font-size="9" fill="#718096" text-anchor="middle">enrichment_status = error</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 2: HUBSPOT WRITE-BACK + SALESFORCE
+═══════════════════════════════════════════ -->
+<rect x="0" y="340" width="1520" height="200" fill="#fef9ec"/>
+<line x1="0" y1="540" x2="1520" y2="540" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,440)" x="26" y="440" font-size="8" font-weight="700" fill="#d97706" letter-spacing="1.5" text-anchor="middle">HUBSPOT + SF</text>
+
+<!-- Merge arrows from Found + Multiple → HubSpot -->
+<path d="M 245,228 L 245,350 L 540,370" fill="none" stroke="#48bb78" stroke-width="2" marker-end="url(#arr-grn)"/>
+<path d="M 1265,228 L 1265,350 L 980,370" fill="none" stroke="#48bb78" stroke-width="2" marker-end="url(#arr-grn)"/>
+
+<!-- HubSpot Contact Record -->
+<rect x="66" y="358" width="900" height="100" rx="12" fill="#fefce8" stroke="#f6ad55" stroke-width="2"/>
+<text x="96" y="384" font-size="14" font-weight="700" fill="#744210">HubSpot — Write Enriched Contact</text>
+<text x="96" y="402" font-size="10" fill="#92400e">Fields written by Clay → HubSpot API integration</text>
+
+<!-- Field chips -->
+<rect x="86" y="412" width="140" height="26" rx="5" fill="#c6f6d5" stroke="#48bb78" stroke-width="1.5"/>
+<text x="156" y="429" font-size="9" font-weight="700" fill="#22543d" text-anchor="middle">personal_email ✨</text>
+
+<rect x="236" y="412" width="140" height="26" rx="5" fill="#fef3c7" stroke="#f6ad55" stroke-width="1.2"/>
+<text x="306" y="429" font-size="9" font-weight="700" fill="#78350f" text-anchor="middle">email (work)</text>
+
+<rect x="386" y="412" width="160" height="26" rx="5" fill="#e2e8f0" stroke="#a0aec0" stroke-width="1.2"/>
+<text x="466" y="429" font-size="9" font-weight="700" fill="#2d3748" text-anchor="middle">enrichment_status</text>
+
+<rect x="556" y="412" width="130" height="26" rx="5" fill="#e2e8f0" stroke="#a0aec0" stroke-width="1.2"/>
+<text x="621" y="429" font-size="9" font-weight="700" fill="#2d3748" text-anchor="middle">enriched_at</text>
+
+<rect x="696" y="412" width="160" height="26" rx="5" fill="#e2e8f0" stroke="#a0aec0" stroke-width="1.2"/>
+<text x="776" y="429" font-size="9" font-weight="700" fill="#2d3748" text-anchor="middle">audience_segment</text>
+
+<!-- Salesforce sync box -->
+<rect x="1020" y="358" width="440" height="100" rx="12" fill="#bee3f8" stroke="#4299e1" stroke-width="2"/>
+<text x="1050" y="384" font-size="14" font-weight="700" fill="#1a365d">Salesforce — Auto-Sync</text>
+<text x="1050" y="402" font-size="10" fill="#2c5282">HubSpot → SF two-way sync · No extra setup</text>
+<text x="1050" y="422" font-size="10" fill="#2c5282">BDRs &amp; AEs see personal_email in SF</text>
+<text x="1050" y="440" font-size="9" fill="#718096" font-style="italic">Deals sync back: SF Opportunities → HubSpot deals</text>
+
+<!-- Arrow: HubSpot → Salesforce -->
+<line x1="966" y1="408" x2="1020" y2="408" stroke="#4299e1" stroke-width="2" marker-end="url(#arr-blue)"/>
+
+<!-- Salesforce deal sync back arrow -->
+<path d="M 1240,458 L 1240,498 L 516,498 L 516,458" fill="none" stroke="#4299e1" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arr-blue)"/>
+<text x="878" y="510" font-size="9" fill="#4299e1" font-style="italic">deal_association syncs back from Salesforce → HubSpot</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 3: DEAL DECISION GATE
+═══════════════════════════════════════════ -->
+<rect x="0" y="540" width="1520" height="180" fill="#faf5ff"/>
+<line x1="0" y1="720" x2="1520" y2="720" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,630)" x="26" y="630" font-size="8" font-weight="700" fill="#9f7aea" letter-spacing="1.5" text-anchor="middle">DEAL GATE</text>
+
+<!-- Arrow: HubSpot → Decision -->
+<line x1="516" y1="458" x2="516" y2="548" stroke="#94a3b8" stroke-width="2" marker-end="url(#arr)"/>
+
+<!-- Decision diamond -->
+<polygon points="516,555 650,625 516,695 382,625" fill="#faf5ff" stroke="#9f7aea" stroke-width="2.5" stroke-dasharray="7,4"/>
+<text x="516" y="614" font-size="12" font-weight="700" fill="#44337a" text-anchor="middle">Contact</text>
+<text x="516" y="632" font-size="12" font-weight="700" fill="#44337a" text-anchor="middle">has a deal?</text>
+<text x="516" y="650" font-size="9" fill="#6b46c1" text-anchor="middle">(any stage / any outcome)</text>
+
+<!-- NO path — left -->
+<line x1="382" y1="625" x2="200" y2="625" stroke="#48bb78" stroke-width="2.5" marker-end="url(#arr-grn)"/>
+<text x="288" y="614" font-size="11" font-weight="700" fill="#22543d" text-anchor="middle">NO</text>
+<text x="288" y="640" font-size="9" fill="#48bb78" text-anchor="middle">eligible for targeting</text>
+
+<!-- YES path — right -->
+<line x1="650" y1="625" x2="860" y2="625" stroke="#fc8181" stroke-width="2.5" marker-end="url(#arr-red)"/>
+<text x="752" y="614" font-size="11" font-weight="700" fill="#9b2c2c" text-anchor="middle">YES</text>
+<text x="752" y="640" font-size="9" fill="#fc8181" text-anchor="middle">permanent exclusion</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 4: LIST ASSIGNMENT
+═══════════════════════════════════════════ -->
+<rect x="0" y="720" width="1520" height="220" fill="#f7fafc"/>
+<line x1="0" y1="940" x2="1520" y2="940" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,830)" x="26" y="830" font-size="8" font-weight="700" fill="#718096" letter-spacing="1.5" text-anchor="middle">HUBSPOT LISTS</text>
+
+<!-- Targeting Lists (left) -->
+<rect x="66" y="730" width="460" height="195" rx="10" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+<text x="96" y="756" font-size="13" font-weight="700" fill="#22543d">📋  Targeting Lists</text>
+<text x="96" y="774" font-size="9.5" fill="#276749">No deal · personal_email is known · msp_verified = true</text>
+
+<rect x="86" y="786" width="420" height="24" rx="5" fill="#c6f6d5"/>
+<text x="296" y="803" font-size="9.5" font-weight="700" fill="#22543d" text-anchor="middle">[ADS] Enriched MSP Contacts — Personal Email Available</text>
+
+<rect x="86" y="816" width="135" height="24" rx="5" fill="#c6f6d5"/>
+<text x="153" y="833" font-size="9" fill="#22543d" text-anchor="middle">[ADS] Named Accounts</text>
+
+<rect x="228" y="816" width="120" height="24" rx="5" fill="#c6f6d5"/>
+<text x="288" y="833" font-size="9" fill="#22543d" text-anchor="middle">[ADS] MSP US</text>
+
+<rect x="356" y="816" width="135" height="24" rx="5" fill="#c6f6d5"/>
+<text x="423" y="833" font-size="9" fill="#22543d" text-anchor="middle">[ADS] MSP Canada</text>
+
+<text x="96" y="862" font-size="9" fill="#276749">Contacts with no lifecycle stage → default to acquisition</text>
+<text x="96" y="878" font-size="9" fill="#276749">Lead / MQL / Unknown = full ad targeting</text>
+<text x="96" y="894" font-size="9" fill="#718096" font-style="italic">SQL/Opportunity contacts: personal_email in CRM only, NOT in ad lists</text>
+<text x="96" y="910" font-size="9" fill="#718096" font-style="italic">Customer contacts: retention/upsell audiences only</text>
+
+<!-- Arrow: NO → Targeting -->
+<path d="M 200,625 L 130,625 L 130,730" fill="none" stroke="#48bb78" stroke-width="2" marker-end="url(#arr-grn)"/>
+
+<!-- Exclusion Lists (right) -->
+<rect x="860" y="730" width="600" height="195" rx="10" fill="#fff5f5" stroke="#fc8181" stroke-width="2"/>
+<text x="890" y="756" font-size="13" font-weight="700" fill="#9b2c2c">🚫  Exclusion Lists</text>
+<text x="890" y="774" font-size="9.5" fill="#c53030">Any deal association = PERMANENT exclusion · both emails excluded</text>
+
+<rect x="870" y="786" width="360" height="24" rx="5" fill="#fed7d7"/>
+<text x="1050" y="803" font-size="9.5" font-weight="700" fill="#9b2c2c" text-anchor="middle">[ADS] EXCLUDE — All Deal Contacts 🔒 (master)</text>
+
+<rect x="870" y="816" width="170" height="24" rx="5" fill="#fed7d7"/>
+<text x="955" y="833" font-size="9" fill="#9b2c2c" text-anchor="middle">[ADS] EXCL Closed Won</text>
+
+<rect x="1050" y="816" width="170" height="24" rx="5" fill="#fed7d7"/>
+<text x="1135" y="833" font-size="9" fill="#9b2c2c" text-anchor="middle">[ADS] EXCL Closed Lost</text>
+
+<rect x="1230" y="816" width="180" height="24" rx="5" fill="#fed7d7"/>
+<text x="1320" y="833" font-size="9" fill="#9b2c2c" text-anchor="middle">[ADS] EXCL Active Pipeline</text>
+
+<text x="890" y="862" font-size="9" fill="#9b2c2c">Once a contact has any deal → always excluded · permanent</text>
+<text x="890" y="878" font-size="9" fill="#9b2c2c">Both work email + personal email excluded</text>
+<text x="890" y="894" font-size="9" fill="#718096" font-style="italic">Day 1 sync is retroactive — all existing deal contacts added immediately</text>
+<text x="890" y="910" font-size="9" fill="#718096" font-style="italic">Re-engagement = deliberate sales-led decision → manual removal only</text>
+
+<!-- Arrow: YES → Exclusion -->
+<path d="M 860,625 L 1160,625 L 1160,730" fill="none" stroke="#fc8181" stroke-width="2" marker-end="url(#arr-red)"/>
+
+<!-- ═══════════════════════════════════════════
+     LANE 5: DUAL SYNC STACK
+═══════════════════════════════════════════ -->
+<rect x="0" y="940" width="1520" height="310" fill="#fff5f7"/>
+<line x1="0" y1="1250" x2="1520" y2="1250" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,1095)" x="26" y="1095" font-size="8" font-weight="700" fill="#ed64a6" letter-spacing="1.5" text-anchor="middle">DUAL SYNC</text>
+
+<!-- Flow A — HubSpot Native -->
+<rect x="66" y="952" width="680" height="280" rx="12" fill="#bee3f8" stroke="#4299e1" stroke-width="2"/>
+<text x="96" y="978" font-size="13" font-weight="700" fill="#1a365d">🟠  Flow A — HubSpot Native Ad Audience Sync</text>
+<text x="96" y="996" font-size="9.5" fill="#2c5282">List-based · continuous · authoritative for standing audiences · updates every few hours</text>
+
+<!-- Targeting sync sub-box -->
+<rect x="86" y="1010" width="310" height="80" rx="8" fill="#e8f4fd" stroke="#63b3ed" stroke-width="1.4"/>
+<text x="241" y="1032" font-size="10" font-weight="700" fill="#1a365d" text-anchor="middle">Targeting Sync</text>
+<text x="241" y="1048" font-size="9" fill="#2c5282" text-anchor="middle">Enriched MSP lists → Meta Custom Audience</text>
+<text x="241" y="1062" font-size="9" fill="#2c5282" text-anchor="middle">+ Google Customer Match</text>
+<text x="241" y="1076" font-size="9" fill="#2c5282" text-anchor="middle">+ LinkedIn Matched Audiences</text>
+
+<!-- Exclusion sync sub-box -->
+<rect x="406" y="1010" width="320" height="80" rx="8" fill="#fed7d7" stroke="#fc8181" stroke-width="1.4"/>
+<text x="566" y="1032" font-size="10" font-weight="700" fill="#9b2c2c" text-anchor="middle">Exclusion Sync</text>
+<text x="566" y="1048" font-size="9" fill="#c53030" text-anchor="middle">Deal contact list → Meta Custom Audience</text>
+<text x="566" y="1062" font-size="9" fill="#c53030" text-anchor="middle">+ Google Customer Match</text>
+<text x="566" y="1076" font-size="9" fill="#c53030" text-anchor="middle">(applied as exclusion on all campaigns)</text>
+
+<!-- Emails sent -->
+<text x="96" y="1112" font-size="9.5" font-weight="700" fill="#2c5282">Both email types sent (hashed SHA-256):</text>
+<rect x="86" y="1118" width="130" height="22" rx="4" fill="#fef3c7" stroke="#f6ad55" stroke-width="1"/>
+<text x="151" y="1133" font-size="9" fill="#78350f" text-anchor="middle">email (work)</text>
+<rect x="226" y="1118" width="150" height="22" rx="4" fill="#c6f6d5" stroke="#48bb78" stroke-width="1"/>
+<text x="301" y="1133" font-size="9" fill="#22543d" text-anchor="middle">personal_email ✨</text>
+<rect x="386" y="1118" width="120" height="22" rx="4" fill="#e2e8f0" stroke="#a0aec0" stroke-width="1"/>
+<text x="446" y="1133" font-size="9" fill="#2d3748" text-anchor="middle">first + last name</text>
+
+<text x="96" y="1162" font-size="9" fill="#718096" font-style="italic">Sync may have a few-hour delay — Flow B (Stape) closes the real-time gap</text>
+<text x="96" y="1178" font-size="9" fill="#718096" font-style="italic">First sync is retroactive — all existing deal contacts excluded on day 1</text>
+<text x="96" y="1194" font-size="9" fill="#718096" font-style="italic">HubSpot → Marketing → Ads → Audiences → Create from each list</text>
+<text x="96" y="1210" font-size="9" fill="#718096" font-style="italic">Connect accounts: Settings → Marketing → Ads → Meta + Google + LinkedIn</text>
+
+<!-- Arrows: Lists → Flow A -->
+<line x1="296" y1="925" x2="296" y2="952" stroke="#48bb78" stroke-width="1.8" marker-end="url(#arr-grn)"/>
+<path d="M 1050,925 L 1050,938 L 566,938 L 566,952" fill="none" stroke="#fc8181" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr-red)"/>
+
+<!-- Flow B — Stape.io -->
+<rect x="780" y="952" width="680" height="280" rx="12" fill="#fce7f3" stroke="#ed64a6" stroke-width="2"/>
+<text x="810" y="978" font-size="13" font-weight="700" fill="#702459">⚡  Flow B — Stape.io (CAPI + Signals Gateway)</text>
+<text x="810" y="996" font-size="9.5" fill="#97266d">Real-time event firing · closes sync delay gap · feeds platform algorithms</text>
+
+<!-- Event triggers -->
+<rect x="790" y="1010" width="650" height="28" rx="6" fill="#fbb6ce" stroke="#ed64a6" stroke-width="1.2"/>
+<text x="1115" y="1028" font-size="10" font-weight="700" fill="#702459" text-anchor="middle">HubSpot Trigger Events → Stape fires to Meta CAPI + Google Ads + LinkedIn</text>
+
+<rect x="790" y="1046" width="125" height="48" rx="5" fill="#fff0f7"/>
+<text x="852" y="1064" font-size="9" font-weight="700" fill="#702459" text-anchor="middle">MQL / SQL</text>
+<text x="852" y="1078" font-size="8.5" fill="#97266d" text-anchor="middle">Lifecycle stage</text>
+<text x="852" y="1090" font-size="8.5" fill="#97266d" text-anchor="middle">change event</text>
+
+<rect x="925" y="1046" width="135" height="48" rx="5" fill="#fff0f7"/>
+<text x="992" y="1064" font-size="9" font-weight="700" fill="#9b2c2c" text-anchor="middle">DealCreated ⚠️</text>
+<text x="992" y="1078" font-size="8.5" fill="#97266d" text-anchor="middle">Primary exclusion</text>
+<text x="992" y="1090" font-size="8.5" fill="#97266d" text-anchor="middle">trigger — real-time</text>
+
+<rect x="1070" y="1046" width="125" height="48" rx="5" fill="#fff0f7"/>
+<text x="1132" y="1064" font-size="9" font-weight="700" fill="#702459" text-anchor="middle">DealStageUpdate</text>
+<text x="1132" y="1078" font-size="8.5" fill="#97266d" text-anchor="middle">Pipeline progress</text>
+<text x="1132" y="1090" font-size="8.5" fill="#97266d" text-anchor="middle">reinforcement</text>
+
+<rect x="1205" y="1046" width="120" height="48" rx="5" fill="#fff0f7"/>
+<text x="1265" y="1064" font-size="9" font-weight="700" fill="#702459" text-anchor="middle">ClosedWon</text>
+<text x="1265" y="1078" font-size="8.5" fill="#97266d" text-anchor="middle">Highest-value</text>
+<text x="1265" y="1090" font-size="8.5" fill="#97266d" text-anchor="middle">conversion signal</text>
+
+<rect x="1335" y="1046" width="110" height="48" rx="5" fill="#fff0f7"/>
+<text x="1390" y="1064" font-size="9" font-weight="700" fill="#702459" text-anchor="middle">ClosedLost</text>
+<text x="1390" y="1078" font-size="8.5" fill="#97266d" text-anchor="middle">Exclusion</text>
+<text x="1390" y="1090" font-size="8.5" fill="#97266d" text-anchor="middle">reinforcement</text>
+
+<!-- Stape data sent -->
+<text x="810" y="1118" font-size="9.5" font-weight="700" fill="#702459">Data sent per event (hashed SHA-256):</text>
+<rect x="790" y="1124" width="120" height="22" rx="4" fill="#fef3c7" stroke="#f6ad55" stroke-width="1"/>
+<text x="850" y="1139" font-size="9" fill="#78350f" text-anchor="middle">email (work)</text>
+<rect x="920" y="1124" width="140" height="22" rx="4" fill="#c6f6d5" stroke="#48bb78" stroke-width="1"/>
+<text x="990" y="1139" font-size="9" fill="#22543d" text-anchor="middle">personal_email ✨</text>
+<rect x="1070" y="1124" width="110" height="22" rx="4" fill="#e2e8f0" stroke="#a0aec0" stroke-width="1"/>
+<text x="1125" y="1139" font-size="9" fill="#2d3748" text-anchor="middle">name + phone</text>
+
+<text x="810" y="1168" font-size="9" fill="#718096" font-style="italic">Meta: Signals Gateway endpoint · Google: Customer Match + Offline Conversion API</text>
+<text x="810" y="1184" font-size="9" fill="#718096" font-style="italic">Deduplication: event_id = hs_object_id + dealstage + timestamp</text>
+<text x="810" y="1200" font-size="9" fill="#718096" font-style="italic">ClosedWon signals feed Smart Bidding + Lookalike algorithms</text>
+<text x="810" y="1216" font-size="9" fill="#718096" font-style="italic">Install: Stape HubSpot CRM App from HubSpot Marketplace (~10 min setup)</text>
+
+<!-- Arrow: Exclusion list → Flow B -->
+<path d="M 1260,925 L 1260,938 L 1115,938 L 1115,952" fill="none" stroke="#fc8181" stroke-width="1.8" marker-end="url(#arr-red)"/>
+<!-- Arrow: Targeting list → Flow B (signals) -->
+<path d="M 400,925 L 400,936 L 870,936 L 870,952" fill="none" stroke="#48bb78" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr-grn)"/>
+<text x="640" y="932" font-size="8.5" fill="#48bb78" font-style="italic">MQL/SQL lifecycle signals also via Stape</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 6: PLATFORM AUDIENCES
+═══════════════════════════════════════════ -->
+<rect x="0" y="1250" width="1520" height="530" fill="#f7fafc"/>
+<line x1="0" y1="1780" x2="1520" y2="1780" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,1515)" x="26" y="1515" font-size="8" font-weight="700" fill="#4299e1" letter-spacing="1.5" text-anchor="middle">AD PLATFORMS</text>
+
+<!-- META header -->
+<rect x="66" y="1262" width="470" height="32" rx="8" fill="#e8f4fd" stroke="#63b3ed" stroke-width="1.5"/>
+<text x="301" y="1283" font-size="12" font-weight="700" fill="#1a365d" text-anchor="middle">📘  Meta Business Manager</text>
+
+<!-- GOOGLE header -->
+<rect x="556" y="1262" width="470" height="32" rx="8" fill="#fef3c7" stroke="#f6ad55" stroke-width="1.5"/>
+<text x="791" y="1283" font-size="12" font-weight="700" fill="#744210" text-anchor="middle">🔵  Google Ads</text>
+
+<!-- LINKEDIN header -->
+<rect x="1046" y="1262" width="410" height="32" rx="8" fill="#e9d8fd" stroke="#b794f4" stroke-width="1.5"/>
+<text x="1251" y="1283" font-size="12" font-weight="700" fill="#44337a" text-anchor="middle">💼  LinkedIn Ads</text>
+
+<!-- META Targeting -->
+<rect x="66" y="1304" width="230" height="160" rx="10" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+<text x="181" y="1326" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">Targeting Audiences</text>
+<text x="181" y="1342" font-size="9" fill="#276749" text-anchor="middle">Custom Audience (Customer List)</text>
+<text x="86" y="1362" font-size="9" fill="#22543d">Source: Flow A list sync</text>
+<text x="86" y="1378" font-size="9" fill="#22543d">Source: Flow B MQL/SQL signals</text>
+<text x="86" y="1398" font-size="9" fill="#276749">Match rate: 50–70%</text>
+<text x="86" y="1414" font-size="9" fill="#718096" font-style="italic">vs 15–30% work email only</text>
+<text x="86" y="1434" font-size="9" fill="#276749">Lookalike: 1–3% once ≥100</text>
+<text x="86" y="1450" font-size="9" fill="#718096" font-style="italic">Min 100 matched to activate</text>
+
+<!-- META Exclusion -->
+<rect x="306" y="1304" width="230" height="160" rx="10" fill="#fff5f5" stroke="#fc8181" stroke-width="2"/>
+<text x="421" y="1326" font-size="10" font-weight="700" fill="#9b2c2c" text-anchor="middle">Exclusion Audience</text>
+<text x="421" y="1342" font-size="9" fill="#c53030" text-anchor="middle">AP — Deal Contacts Exclusion</text>
+<text x="316" y="1362" font-size="9" fill="#9b2c2c">Source: Flow A exclusion sync</text>
+<text x="316" y="1378" font-size="9" fill="#9b2c2c">Source: Flow B DealCreated</text>
+<text x="316" y="1398" font-size="9" fill="#9b2c2c">🚫 Applied to ALL ad sets</text>
+<text x="316" y="1414" font-size="9" fill="#9b2c2c">🚫 work + personal email</text>
+<text x="316" y="1434" font-size="9" fill="#9b2c2c">🚫 Permanent · retroactive</text>
+
+<!-- GOOGLE Targeting -->
+<rect x="556" y="1304" width="230" height="160" rx="10" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+<text x="671" y="1326" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">Targeting Audiences</text>
+<text x="671" y="1342" font-size="9" fill="#276749" text-anchor="middle">Customer Match (targeting)</text>
+<text x="576" y="1362" font-size="9" fill="#22543d">Source: Flow A list sync</text>
+<text x="576" y="1378" font-size="9" fill="#22543d">Source: Flow B offline conv.</text>
+<text x="576" y="1398" font-size="9" fill="#276749">Match rate: 60–80%</text>
+<text x="576" y="1414" font-size="9" fill="#718096" font-style="italic">vs 30–50% work email only</text>
+<text x="576" y="1434" font-size="9" fill="#276749">Similar Segments enabled</text>
+<text x="576" y="1450" font-size="9" fill="#718096" font-style="italic">Requires $50k+ lifetime spend</text>
+
+<!-- GOOGLE Exclusion -->
+<rect x="796" y="1304" width="230" height="160" rx="10" fill="#fff5f5" stroke="#fc8181" stroke-width="2"/>
+<text x="911" y="1326" font-size="10" font-weight="700" fill="#9b2c2c" text-anchor="middle">Exclusion Audience</text>
+<text x="911" y="1342" font-size="9" fill="#c53030" text-anchor="middle">AP — Deal Contacts Exclusion</text>
+<text x="806" y="1362" font-size="9" fill="#9b2c2c">Source: Flow A exclusion sync</text>
+<text x="806" y="1378" font-size="9" fill="#9b2c2c">Source: Flow B DealCreated</text>
+<text x="806" y="1398" font-size="9" fill="#9b2c2c">🚫 Negative audience at campaign</text>
+<text x="806" y="1414" font-size="9" fill="#9b2c2c">🚫 Check ad group overrides</text>
+<text x="806" y="1434" font-size="9" fill="#9b2c2c">🚫 Permanent · retroactive</text>
+
+<!-- LINKEDIN Targeting -->
+<rect x="1046" y="1304" width="200" height="160" rx="10" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+<text x="1146" y="1326" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">Targeting Audiences</text>
+<text x="1146" y="1342" font-size="9" fill="#276749" text-anchor="middle">Matched Audiences</text>
+<text x="1056" y="1362" font-size="9" fill="#22543d">Source: Flow A list sync</text>
+<text x="1056" y="1378" font-size="9" fill="#22543d">Already strong on work email</text>
+<text x="1056" y="1398" font-size="9" fill="#276749">Personal adds redundancy</text>
+<text x="1056" y="1414" font-size="9" fill="#276749">Sponsored Content + InMail</text>
+
+<!-- LINKEDIN Exclusion -->
+<rect x="1256" y="1304" width="200" height="160" rx="10" fill="#fff5f5" stroke="#fc8181" stroke-width="2"/>
+<text x="1356" y="1326" font-size="10" font-weight="700" fill="#9b2c2c" text-anchor="middle">Exclusion Audience</text>
+<text x="1356" y="1342" font-size="9" fill="#c53030" text-anchor="middle">Deal Contacts Exclusion</text>
+<text x="1266" y="1362" font-size="9" fill="#9b2c2c">Source: Flow A sync</text>
+<text x="1266" y="1378" font-size="9" fill="#9b2c2c">🚫 Applied to campaigns</text>
+<text x="1266" y="1398" font-size="9" fill="#9b2c2c">🚫 Permanent</text>
+
+<!-- Arrows: Flow A → Platform audiences -->
+<line x1="241" y1="1232" x2="181" y2="1304" stroke="#4299e1" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+<line x1="360" y1="1232" x2="421" y2="1304" stroke="#fc8181" stroke-width="1.8" marker-end="url(#arr-red)"/>
+<line x1="460" y1="1232" x2="671" y2="1304" stroke="#4299e1" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+<line x1="566" y1="1232" x2="911" y2="1304" stroke="#fc8181" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr-red)"/>
+<line x1="620" y1="1232" x2="1146" y2="1304" stroke="#4299e1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+<line x1="680" y1="1232" x2="1356" y2="1304" stroke="#fc8181" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+
+<!-- Arrows: Flow B → Platform audiences -->
+<line x1="920" y1="1232" x2="421" y2="1304" stroke="#ed64a6" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-pink)"/>
+<line x1="1060" y1="1232" x2="911" y2="1304" stroke="#ed64a6" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-pink)"/>
+
+<!-- CAMPAIGN END STATE -->
+<rect x="66" y="1486" width="1390" height="270" rx="10" fill="#f8fafc" stroke="#a0aec0" stroke-width="1.5"/>
+<text x="761" y="1512" font-size="13" font-weight="700" fill="#2d3748" text-anchor="middle">Campaign End State — What Gets Applied</text>
+
+<!-- Meta column -->
+<text x="96" y="1538" font-size="11" font-weight="700" fill="#1a365d">📘 Meta</text>
+<text x="96" y="1558" font-size="9.5" fill="#22543d">✅ Targeting: AP — Enriched MSP Contacts on all prospecting ad sets</text>
+<text x="96" y="1574" font-size="9.5" fill="#22543d">✅ Lookalike: 1–3% from enriched audience (once ≥100 matched)</text>
+<text x="96" y="1590" font-size="9.5" fill="#9b2c2c">🚫 Exclusion: AP — Deal Contacts Exclusion on EVERY ad set, EVERY campaign</text>
+<text x="96" y="1606" font-size="9.5" fill="#2b6cb0">⚡ Signals: DealCreated + ClosedWon events via Stape improve algorithm quality</text>
+<text x="96" y="1622" font-size="9.5" fill="#718096" font-style="italic">Match rate lift: 15–30% → 50–70% with personal email</text>
+
+<!-- Google column -->
+<text x="96" y="1650" font-size="11" font-weight="700" fill="#744210">🔵 Google Ads</text>
+<text x="96" y="1670" font-size="9.5" fill="#22543d">✅ Targeting: AP — Enriched MSP Contacts Customer Match on all campaigns</text>
+<text x="96" y="1686" font-size="9.5" fill="#22543d">✅ Similar Segments enabled for lookalike expansion</text>
+<text x="96" y="1702" font-size="9.5" fill="#9b2c2c">🚫 Exclusion: AP — Deal Contacts Exclusion at campaign level (check ad group overrides)</text>
+<text x="96" y="1718" font-size="9.5" fill="#2b6cb0">⚡ Signals: Offline conversions via Stape improve Smart Bidding optimization</text>
+<text x="96" y="1734" font-size="9.5" fill="#718096" font-style="italic">Match rate lift: 30–50% → 60–80% with personal email · Confirm Customer Match eligibility ($50k+)</text>
+
+<!-- LinkedIn column -->
+<text x="800" y="1538" font-size="11" font-weight="700" fill="#44337a">💼 LinkedIn</text>
+<text x="800" y="1558" font-size="9.5" fill="#22543d">✅ Targeting: Matched Audiences from enriched lists (Sponsored Content + InMail)</text>
+<text x="800" y="1574" font-size="9.5" fill="#9b2c2c">🚫 Exclusion: Deal contacts excluded from all campaigns</text>
+<text x="800" y="1590" font-size="9.5" fill="#718096" font-style="italic">Already strong on work email — personal email adds redundancy, smallest incremental lift</text>
+
+<!-- Mandatory governance note -->
+<rect x="86" y="1750" width="1350" height="2" rx="1" fill="#e2e8f0"/>
+<text x="761" y="1770" font-size="10" font-weight="700" fill="#9b2c2c" text-anchor="middle">⚠️  MANDATORY: Every new campaign/ad set must include the exclusion audience — non-negotiable campaign launch checklist item</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 7: MONITORING
+═══════════════════════════════════════════ -->
+<rect x="0" y="1780" width="1520" height="120" fill="#f0fff4"/>
+<line x1="0" y1="1900" x2="1520" y2="1900" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,1840)" x="26" y="1840" font-size="8" font-weight="700" fill="#48bb78" letter-spacing="1.5" text-anchor="middle">MONITOR</text>
+
+<rect x="66" y="1792" width="260" height="80" rx="9" fill="#f0fff4" stroke="#68d391" stroke-width="1.5"/>
+<text x="196" y="1815" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">📊  HubSpot Lists</text>
+<text x="196" y="1832" font-size="9" fill="#718096" text-anchor="middle">Exclusion list size vs deals</text>
+<text x="196" y="1847" font-size="9" fill="#718096" text-anchor="middle">Personal email fill rate</text>
+<text x="196" y="1862" font-size="9" fill="#718096" text-anchor="middle">Slack alert: new deal added</text>
+
+<rect x="346" y="1792" width="260" height="80" rx="9" fill="#f0fff4" stroke="#68d391" stroke-width="1.5"/>
+<text x="476" y="1815" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">⚡  Stape Events</text>
+<text x="476" y="1832" font-size="9" fill="#718096" text-anchor="middle">Every deal → DealCreated fires</text>
+<text x="476" y="1847" font-size="9" fill="#718096" text-anchor="middle">Meta match rate target: >60%</text>
+<text x="476" y="1862" font-size="9" fill="#718096" text-anchor="middle">Alert on missed events</text>
+
+<rect x="626" y="1792" width="260" height="80" rx="9" fill="#f0fff4" stroke="#68d391" stroke-width="1.5"/>
+<text x="756" y="1815" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">📈  Ad Platform Audiences</text>
+<text x="756" y="1832" font-size="9" fill="#718096" text-anchor="middle">Audience size + match rate</text>
+<text x="756" y="1847" font-size="9" fill="#718096" text-anchor="middle">Compare before/after personal email</text>
+<text x="756" y="1862" font-size="9" fill="#718096" text-anchor="middle">Sync lag alert if >24h</text>
+
+<rect x="906" y="1792" width="260" height="80" rx="9" fill="#f0fff4" stroke="#68d391" stroke-width="1.5"/>
+<text x="1036" y="1815" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">🔍  Monthly Spot-Check</text>
+<text x="1036" y="1832" font-size="9" fill="#718096" text-anchor="middle">3–5 deal contacts verified</text>
+<text x="1036" y="1847" font-size="9" fill="#718096" text-anchor="middle">In exclusion audience on all platforms</text>
+<text x="1036" y="1862" font-size="9" fill="#718096" text-anchor="middle">Both emails present</text>
+
+<rect x="1186" y="1792" width="270" height="80" rx="9" fill="#f0fff4" stroke="#68d391" stroke-width="1.5"/>
+<text x="1321" y="1815" font-size="10" font-weight="700" fill="#22543d" text-anchor="middle">🧱  Enrichment Pipeline</text>
+<text x="1321" y="1832" font-size="9" fill="#718096" text-anchor="middle">RocketReach credits consumed</text>
+<text x="1321" y="1847" font-size="9" fill="#718096" text-anchor="middle">Enrichment hit rate >50%</text>
+<text x="1321" y="1862" font-size="9" fill="#718096" text-anchor="middle">personal_email fill rate growth</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 8: PERSONAL EMAIL GAP HANDLING
+═══════════════════════════════════════════ -->
+<rect x="0" y="1900" width="1520" height="160" fill="#fffbeb"/>
+<line x1="0" y1="2060" x2="1520" y2="2060" stroke="#dde6f0" stroke-width="1.2"/>
+<text transform="rotate(-90 26,1980)" x="26" y="1980" font-size="8" font-weight="700" fill="#d97706" letter-spacing="1.5" text-anchor="middle">EDGE CASES</text>
+
+<rect x="66" y="1912" width="1390" height="130" rx="10" fill="#fefce8" stroke="#f6ad55" stroke-width="1.5"/>
+<text x="96" y="1938" font-size="12" font-weight="700" fill="#744210">⚠️  Personal Email Gap Handling — What happens when personal_email is missing?</text>
+
+<rect x="86" y="1950" width="430" height="44" rx="7" fill="#fff" stroke="#a0aec0" stroke-width="1"/>
+<text x="301" y="1968" font-size="9" font-weight="700" fill="#2d3748" text-anchor="middle">Deal created + personal_email exists</text>
+<text x="301" y="1984" font-size="9" fill="#48bb78" text-anchor="middle">✅ Both work + personal email excluded immediately</text>
+
+<rect x="536" y="1950" width="430" height="44" rx="7" fill="#fff" stroke="#a0aec0" stroke-width="1"/>
+<text x="751" y="1968" font-size="9" font-weight="700" fill="#2d3748" text-anchor="middle">Deal created + personal_email is NULL</text>
+<text x="751" y="1984" font-size="9" fill="#ed8936" text-anchor="middle">⚠️ Work email excluded now · personal added on next enrichment cycle</text>
+
+<rect x="986" y="1950" width="430" height="44" rx="7" fill="#fff" stroke="#a0aec0" stroke-width="1"/>
+<text x="1201" y="1968" font-size="9" font-weight="700" fill="#2d3748" text-anchor="middle">personal_email enriched AFTER deal created</text>
+<text x="1201" y="1984" font-size="9" fill="#48bb78" text-anchor="middle">✅ Auto-included in exclusion on next HubSpot sync · no manual action</text>
+
+<text x="96" y="2028" font-size="9" fill="#718096" font-style="italic">Gap window: between deal creation and next enrichment cycle, contact may see an ad via personal account. Low probability. Resolves automatically.</text>
+
+<!-- ═══════════════════════════════════════════
+     LANE 9: LEGEND + OWNERS
+═══════════════════════════════════════════ -->
+<rect x="0" y="2060" width="1520" height="460" fill="#f7fafc"/>
+<text transform="rotate(-90 26,2290)" x="26" y="2290" font-size="8" font-weight="700" fill="#a0aec0" letter-spacing="1.5" text-anchor="middle">LEGEND</text>
+
+<!-- Legend - Flow types -->
+<text x="76" y="2085" font-size="11" font-weight="700" fill="#2d3748">Flow Types</text>
+
+<line x1="76" y1="2104" x2="130" y2="2104" stroke="#48bb78" stroke-width="2.5" marker-end="url(#arr-grn)"/>
+<text x="140" y="2108" font-size="10" fill="#22543d">Targeting flow (enriched contacts → ad audiences)</text>
+
+<line x1="76" y1="2126" x2="130" y2="2126" stroke="#fc8181" stroke-width="2.5" marker-end="url(#arr-red)"/>
+<text x="140" y="2130" font-size="10" fill="#9b2c2c">Exclusion flow (deal contacts → permanent exclusion)</text>
+
+<line x1="76" y1="2148" x2="130" y2="2148" stroke="#9f7aea" stroke-width="2" marker-end="url(#arr-pur)"/>
+<text x="140" y="2152" font-size="10" fill="#44337a">Enrichment flow (Clay → RocketReach → HubSpot)</text>
+
+<line x1="76" y1="2170" x2="130" y2="2170" stroke="#4299e1" stroke-width="2" marker-end="url(#arr-blue)"/>
+<text x="140" y="2174" font-size="10" fill="#1a365d">HubSpot Native Sync (Flow A — list-based)</text>
+
+<line x1="76" y1="2192" x2="130" y2="2192" stroke="#ed64a6" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-pink)"/>
+<text x="140" y="2196" font-size="10" fill="#702459">Stape.io Real-Time Events (Flow B — CAPI)</text>
+
+<line x1="76" y1="2214" x2="130" y2="2214" stroke="#94a3b8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="140" y="2218" font-size="10" fill="#4a5568">General data flow</text>
+
+<!-- Legend - Systems -->
+<text x="500" y="2085" font-size="11" font-weight="700" fill="#2d3748">Systems</text>
+
+<rect x="500" y="2094" width="14" height="14" rx="3" fill="#e9d8fd" stroke="#b794f4" stroke-width="1.2"/>
+<text x="522" y="2105" font-size="10" fill="#44337a">Clay + RocketReach (enrichment)</text>
+
+<rect x="500" y="2114" width="14" height="14" rx="3" fill="#fef3c7" stroke="#f6ad55" stroke-width="1.2"/>
+<text x="522" y="2125" font-size="10" fill="#744210">HubSpot CRM (source of truth)</text>
+
+<rect x="500" y="2134" width="14" height="14" rx="3" fill="#bee3f8" stroke="#4299e1" stroke-width="1.2"/>
+<text x="522" y="2145" font-size="10" fill="#1a365d">Salesforce (sales CRM — auto-sync)</text>
+
+<rect x="500" y="2154" width="14" height="14" rx="3" fill="#fce7f3" stroke="#ed64a6" stroke-width="1.2"/>
+<text x="522" y="2165" font-size="10" fill="#702459">Stape.io (real-time CAPI + Signals Gateway)</text>
+
+<rect x="500" y="2174" width="14" height="14" rx="3" fill="#f0fff4" stroke="#48bb78" stroke-width="1.2"/>
+<text x="522" y="2185" font-size="10" fill="#22543d">Targeting audience (green)</text>
+
+<rect x="500" y="2194" width="14" height="14" rx="3" fill="#fff5f5" stroke="#fc8181" stroke-width="1.2"/>
+<text x="522" y="2205" font-size="10" fill="#9b2c2c">Exclusion audience (red — permanent)</text>
+
+<rect x="500" y="2214" width="14" height="14" rx="3" fill="#c6f6d5" stroke="#48bb78" stroke-width="1.2"/>
+<text x="522" y="2225" font-size="10" fill="#22543d">personal_email field (new — from enrichment)</text>
+
+<!-- Owners -->
+<text x="900" y="2085" font-size="11" font-weight="700" fill="#2d3748">Ownership</text>
+
+<text x="900" y="2105" font-size="10" fill="#4a5568">Clay table + RocketReach enrichment</text>
+<text x="1260" y="2105" font-size="10" fill="#2d3748" font-weight="600">GTM Engineer (Alvin)</text>
+
+<text x="900" y="2123" font-size="10" fill="#4a5568">HubSpot list creation + audience sync</text>
+<text x="1260" y="2123" font-size="10" fill="#2d3748" font-weight="600">HubSpot Admin / Mktg Ops</text>
+
+<text x="900" y="2141" font-size="10" fill="#4a5568">Stape.io install + field mapping</text>
+<text x="1260" y="2141" font-size="10" fill="#2d3748" font-weight="600">GTM Engineer (Alvin)</text>
+
+<text x="900" y="2159" font-size="10" fill="#4a5568">Meta + Google + LinkedIn exclusion apply</text>
+<text x="1260" y="2159" font-size="10" fill="#2d3748" font-weight="600">Sam Battista (Demand Gen)</text>
+
+<text x="900" y="2177" font-size="10" fill="#4a5568">Monthly monitoring + spot-checks</text>
+<text x="1260" y="2177" font-size="10" fill="#2d3748" font-weight="600">Marketing Ops</text>
+
+<text x="900" y="2195" font-size="10" fill="#4a5568">RocketReach credit budget</text>
+<text x="1260" y="2195" font-size="10" fill="#2d3748" font-weight="600">Finance / Mktg Leadership</text>
+
+<text x="900" y="2213" font-size="10" fill="#4a5568">Re-engagement exceptions (Closed Lost)</text>
+<text x="1260" y="2213" font-size="10" fill="#2d3748" font-weight="600">AE/Sales → Mktg Ops action</text>
+
+<!-- Open Questions -->
+<rect x="66" y="2240" width="1390" height="260" rx="10" fill="#fff5f5" stroke="#fed7d7" stroke-width="1.5"/>
+<text x="96" y="2266" font-size="11" font-weight="700" fill="#c53030">❓ Open Decisions Before Launch</text>
+
+<text x="96" y="2290" font-size="10" fill="#c53030">1.</text>
+<text x="112" y="2290" font-size="10" fill="#4a5568">Google Ads Customer Match eligibility — confirm $50k+ lifetime spend threshold met before configuring sync</text>
+
+<text x="96" y="2310" font-size="10" fill="#c53030">2.</text>
+<text x="112" y="2310" font-size="10" fill="#4a5568">Meta Conversions API — confirm Business Manager has CAPI access + system user / access token for Stape</text>
+
+<text x="96" y="2330" font-size="10" fill="#c53030">3.</text>
+<text x="112" y="2330" font-size="10" fill="#4a5568">Stape.io plan — confirm supports Meta Signals Gateway + Google Ads simultaneously; check event volume limits</text>
+
+<text x="96" y="2350" font-size="10" fill="#c53030">4.</text>
+<text x="112" y="2350" font-size="10" fill="#4a5568">RocketReach credit budget — approved monthly ceiling determines enrichment batch size (2k / 5k / 10k contacts)</text>
+
+<text x="96" y="2370" font-size="10" fill="#c53030">5.</text>
+<text x="112" y="2370" font-size="10" fill="#4a5568">Campaign governance — mandatory exclusion checklist at campaign creation, or left to individual campaign managers?</text>
+
+<text x="96" y="2390" font-size="10" fill="#c53030">6.</text>
+<text x="112" y="2390" font-size="10" fill="#4a5568">Re-engagement policy — define process for manually removing Closed Lost contacts from exclusion (requires AE sign-off)</text>
+
+<text x="96" y="2410" font-size="10" fill="#c53030">7.</text>
+<text x="112" y="2410" font-size="10" fill="#4a5568">Apollo write-back — confirm Apollo plan supports contact property updates via API for personal_email write-back</text>
+
+<text x="96" y="2430" font-size="10" fill="#c53030">8.</text>
+<text x="112" y="2430" font-size="10" fill="#4a5568">Phase 2 fallback enricher (Datagma / Clearbit) — in scope for initial launch or deferred?</text>
+
+<text x="96" y="2480" font-size="9" fill="#718096" font-style="italic">Master Flow v2.0 · March 2026 · Alternative Payments · Confidential · Combines: Personal Email Enrichment Strategy v1.1 + Ad Targeting &amp; Exclusion Strategy v1.0</text>
+
+</svg>
+</div>
+
+<!-- STEP SUMMARY CARDS -->
+<div class="cards">
+  <div class="card" style="border-left:4px solid #9f7aea">
+    <div class="step" style="color:#44337a">① Enrichment</div>
+    <p>Clay's full 32,277-contact table sends each contact through RocketReach (First Name + Last Name + Work Domain) to find personal emails. Results written to <code>personal_email</code> in HubSpot. Not found contacts flagged for Phase 2 fallback (Datagma/Clearbit).</p>
+  </div>
+  <div class="card" style="border-left:4px solid #d97706">
+    <div class="step" style="color:#744210">② HubSpot + Salesforce</div>
+    <p>Clay writes enriched data to HubSpot: <code>personal_email</code>, <code>enrichment_status</code>, <code>enriched_at</code>, <code>audience_segment</code>. Two-way sync auto-propagates to Salesforce — BDRs see personal email in SF. Deals sync back from SF → HubSpot.</p>
+  </div>
+  <div class="card" style="border-left:4px solid #9f7aea">
+    <div class="step" style="color:#44337a">③ Deal Gate</div>
+    <p>Single binary decision: does the contact have ANY deal association? <strong>NO</strong> → enters targeting lists. <strong>YES</strong> → permanently excluded from all advertising. Exclusion is permanent regardless of deal stage or outcome.</p>
+  </div>
+  <div class="card" style="border-left:4px solid #718096">
+    <div class="step" style="color:#4a5568">④ List Assignment</div>
+    <p>4 targeting lists (master + Named Accounts, MSP US, MSP Canada). 1 master exclusion list + 3 reporting subsets. Contacts with no lifecycle stage default to acquisition. SQL/Opportunity contacts: CRM only, no ads.</p>
+  </div>
+  <div class="card" style="border-left:4px solid #ed64a6">
+    <div class="step" style="color:#702459">⑤ Dual Sync</div>
+    <p><strong>Flow A (HubSpot Native):</strong> list-based, continuous, authoritative. <strong>Flow B (Stape CAPI):</strong> real-time events, closes sync delay gap, feeds platform algorithms. Both send hashed work + personal email.</p>
+  </div>
+  <div class="card" style="border-left:4px solid #4299e1">
+    <div class="step" style="color:#1a365d">⑥ Ad Platforms</div>
+    <p>Meta, Google, and LinkedIn each receive targeting + exclusion audiences. Personal email lifts match rates dramatically (Meta: 15–30% → 50–70%, Google: 30–50% → 60–80%). Exclusion audiences mandatory on every campaign.</p>
+  </div>
+</div>
+
+<footer>Master Flow v2.0 · March 2026 · Alternative Payments · Confidential &amp; Proprietary · alternativepayments.io<br/>Combines: Personal Email Enrichment Strategy v1.1 + Ad Targeting &amp; Exclusion Strategy v1.0</footer>
+
+</body>
+</html>
