@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Email Enrichment Flow — Alternative Payments</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 14px;
+            color: #888;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+        .mermaid-container {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 40px 20px;
+            border: 1px solid #2a2a4a;
+            overflow-x: auto;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Personal Email Enrichment Flow</h1>
+        <p>Alternative Payments — Clay → HubSpot → Salesforce → Ad Platforms | with Lifecycle Stage Routing</p>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#6C5CE7"></div>Clay</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#A29BFE"></div>RocketReach</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#E17055"></div>Lifecycle Routing</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#FF7A59"></div>HubSpot</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#00A1E0"></div>Salesforce</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#00B894"></div>Ad Platforms</div>
+    </div>
+
+    <div class="mermaid-container">
+        <pre class="mermaid">
+flowchart TD
+    classDef clay fill:#6C5CE7,color:#fff,stroke:#5A4BD1,stroke-width:2px
+    classDef hubspot fill:#FF7A59,color:#fff,stroke:#E5673F,stroke-width:2px
+    classDef salesforce fill:#00A1E0,color:#fff,stroke:#0082B4,stroke-width:2px
+    classDef adplatform fill:#00B894,color:#fff,stroke:#009B7D,stroke-width:2px
+    classDef filter fill:#FDCB6E,color:#333,stroke:#E1B85A,stroke-width:2px
+    classDef decision fill:#E17055,color:#fff,stroke:#C45C3E,stroke-width:2px
+    classDef rocketreach fill:#A29BFE,color:#fff,stroke:#8B83E8,stroke-width:2px
+    classDef excluded fill:#636e72,color:#fff,stroke:#4a5459,stroke-width:2px
+    classDef phase2 fill:#fdcb6e,color:#333,stroke:#e1b85a,stroke-width:2px
+
+    %% ==========================================
+    %% CLAY — FULL LIST ENRICHMENT
+    %% ==========================================
+    A1["CLAY: Find People Table
+    32,277 contacts — Full List
+    No pre-filters applied"]:::clay
+
+    A1 --> RR
+
+    %% ==========================================
+    %% ROCKETREACH ENRICHMENT
+    %% ==========================================
+    RR["ROCKETREACH API
+    First Name + Last Name + Work Domain
+    → Personal Email Lookup"]:::rocketreach
+
+    RR --> RR_RESULT{"ENRICHMENT
+    RESULT"}:::rocketreach
+
+    RR_RESULT -- "Email Found" --> RR_YES["personal_email = result
+    enrichment_status = enriched"]:::rocketreach
+
+    RR_RESULT -- "Multiple Found" --> RR_MULTI["personal_email = best match
+    personal_email_alt = secondary
+    enrichment_status = enriched"]:::rocketreach
+
+    RR_RESULT -- "Not Found" --> RR_NO["enrichment_status = not_found"]:::excluded
+    RR_NO --> PHASE2["PHASE 2 FALLBACK
+    Datagma → Clearbit
+    If still null = permanently_not_found"]:::phase2
+
+    RR_RESULT -- "API Error" --> RR_ERR["enrichment_status = error
+    → Retry next monthly cycle"]:::excluded
+
+    %% ==========================================
+    %% LIFECYCLE STAGE ROUTING
+    %% ==========================================
+    RR_YES --> LS
+    RR_MULTI --> LS
+
+    LS{"LIFECYCLE STAGE
+    ROUTING
+    What stage is the contact?"}:::decision
+
+    LS -- "Lead / MQL" --> TAG_ACQ["ACQUISITION
+    Full ad targeting enabled
+    All 3 platforms"]:::decision
+
+    LS -- "SQL / Opportunity" --> TAG_SALES["SALES ASSIST
+    Write-back only
+    NO ad audiences
+    AE owns relationship"]:::decision
+
+    LS -- "Customer" --> TAG_RET["RETENTION
+    Upsell/retention audiences only
+    No acquisition ads"]:::decision
+
+    LS -- "Closed Lost" --> TAG_WIN["WIN-BACK
+    Re-engagement campaigns
+    Specific win-back messaging"]:::decision
+
+    LS -- "No Lifecycle Stage /
+    Unknown" --> TAG_NEW["NEW — DEFAULT TO ACQUISITION
+    No stage assigned yet
+    Full ad targeting enabled
+    Market to them as net-new"]:::decision
+
+    %% ==========================================
+    %% HUBSPOT WRITE-BACK
+    %% ==========================================
+    TAG_ACQ --> HS1
+    TAG_SALES --> HS1
+    TAG_RET --> HS1
+    TAG_WIN --> HS1
+    TAG_NEW --> HS1
+
+    HS1["HUBSPOT: Write Contact
+    • personal_email
+    • enrichment_status
+    • enriched_at
+    • audience_segment"]:::hubspot
+
+    %% ==========================================
+    %% SALESFORCE AUTO-SYNC
+    %% ==========================================
+    HS1 --> SF1["SALESFORCE: Auto-Sync
+    HubSpot → SF 2-way sync
+    BDRs & AEs see personal_email
+    on Contact/Lead records"]:::salesforce
+
+    %% ==========================================
+    %% STEP 1: HUBSPOT ACTIVE LISTS
+    %% Built in HubSpot under Contacts → Lists
+    %% These are Smart Lists that auto-update
+    %% ==========================================
+    HS1 --> LIST_STEP["HUBSPOT: Active Lists
+    Settings → Contacts → Lists
+    Create 4 Active Lists based on
+    audience_segment property"]:::hubspot
+
+    LIST_STEP --> LIST1["Active List: AP - Acquisition
+    Filter: audience_segment = acquisition
+    AND personal_email is known
+    Auto-updates as new contacts enrich"]:::hubspot
+
+    LIST_STEP --> LIST2["Active List: AP - Retention
+    Filter: audience_segment = retention
+    AND personal_email is known"]:::hubspot
+
+    LIST_STEP --> LIST3["Active List: AP - Winback
+    Filter: audience_segment = winback
+    AND personal_email is known"]:::hubspot
+
+    LIST_STEP -. "No list created" .-> LIST4["audience_segment = sales_assist
+    NOT added to any ad list
+    Personal email stays in CRM only
+    for BDR/AE use"]:::excluded
+
+    %% ==========================================
+    %% STEP 2: CONNECT AD ACCOUNTS IN HUBSPOT
+    %% Settings → Marketing → Ads
+    %% One-time setup per platform
+    %% ==========================================
+    LIST1 & LIST2 & LIST3 --> AD_CONNECT["HUBSPOT: Ad Accounts
+    Settings → Marketing → Ads
+    Connect each ad platform account
+    One-time setup"]:::hubspot
+
+    AD_CONNECT --> AD_META["Connect: Meta Business Manager
+    Grant HubSpot access to
+    your Meta ad account"]:::hubspot
+    AD_CONNECT --> AD_GOOGLE["Connect: Google Ads Account
+    Grant HubSpot access to
+    your Google ad account"]:::hubspot
+    AD_CONNECT --> AD_LI["Connect: LinkedIn Campaign Manager
+    Grant HubSpot access to
+    your LinkedIn ad account"]:::hubspot
+
+    %% ==========================================
+    %% STEP 3: CREATE AUDIENCES FROM LISTS
+    %% HubSpot → Marketing → Ads → Audiences
+    %% This is where lists become ad audiences
+    %% ==========================================
+    AD_META --> SYNC_STEP["HUBSPOT: Ads → Audiences
+    Marketing → Ads → Audiences tab
+    Create Audience from each Active List
+    Select which ad accounts to sync to"]:::hubspot
+
+    AD_GOOGLE --> SYNC_STEP
+    AD_LI --> SYNC_STEP
+
+    SYNC_STEP --> SYNC1["Sync: AP - Acquisition List
+    → Select: Meta + Google + LinkedIn
+    HubSpot hashes emails SHA-256
+    and pushes to all 3 platforms"]:::hubspot
+
+    SYNC_STEP --> SYNC2["Sync: AP - Retention List
+    → Select: Meta + Google + LinkedIn
+    Separate audience per platform
+    for retention/upsell campaigns"]:::hubspot
+
+    SYNC_STEP --> SYNC3["Sync: AP - Winback List
+    → Select: Meta + Google + LinkedIn
+    Separate audience per platform
+    for re-engagement campaigns"]:::hubspot
+
+    %% ==========================================
+    %% WHAT HUBSPOT SENDS (auto, every ~few hours)
+    %% ==========================================
+    SYNC1 & SYNC2 & SYNC3 --> HASH["HUBSPOT AUTO-SYNC
+    Runs automatically every few hours
+    Hashes PII before sending:
+    • personal_email → SHA-256
+    • work_email → SHA-256
+    • first_name, last_name → SHA-256
+    List adds/removes sync incrementally"]:::hubspot
+
+    %% ==========================================
+    %% AD PLATFORMS — WHAT THEY RECEIVE
+    %% ==========================================
+    HASH --> META["META ADS
+    Custom Audiences tab
+    3 audiences appear:
+    AP-Acquisition / AP-Retention / AP-Winback
+    Matches on personal email primarily
+    Highest match rate lift expected"]:::adplatform
+
+    HASH --> GOOGLE["GOOGLE ADS
+    Audience Manager → Customer Match
+    3 audiences appear:
+    AP-Acquisition / AP-Retention / AP-Winback
+    Matches on personal Gmail accounts
+    Strong lift for Display + YouTube"]:::adplatform
+
+    HASH --> LINKEDIN["LINKEDIN ADS
+    Campaign Manager → Matched Audiences
+    3 audiences appear:
+    AP-Acquisition / AP-Retention / AP-Winback
+    Already strong on work email
+    Personal email adds redundancy"]:::adplatform
+
+    %% ==========================================
+    %% CAMPAIGN USAGE
+    %% ==========================================
+    META --> CAMP_META["Use in Meta Ads Manager:
+    Create Campaign → Custom Audience
+    → select AP-Acquisition / Retention / Winback
+    Tailor creative per segment"]:::adplatform
+
+    GOOGLE --> CAMP_GOOGLE["Use in Google Ads:
+    Campaign → Audiences
+    → select AP-Acquisition / Retention / Winback
+    Use for Search, Display, YouTube"]:::adplatform
+
+    LINKEDIN --> CAMP_LI["Use in LinkedIn Campaign Manager:
+    Campaign → Audience
+    → select AP-Acquisition / Retention / Winback
+    Use for Sponsored Content, InMail"]:::adplatform
+        </pre>
+    </div>
+
+    <div class="footer">
+        Alternative Payments — Personal Email Enrichment Strategy v1.1 | March 2026 | Confidential
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                nodeSpacing: 50,
+                rankSpacing: 60
+            },
+            themeVariables: {
+                darkMode: true,
+                background: '#1a1a2e',
+                primaryColor: '#6C5CE7',
+                fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
+                fontSize: '13px'
+            }
+        });
+    </script>
+</body>
+</html>
