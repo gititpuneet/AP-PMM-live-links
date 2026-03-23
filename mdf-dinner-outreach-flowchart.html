@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDF NYC Stride Dinner — Outreach Workflow Flowchart</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%);
+            color: #e0e8f0;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            font-size: 1rem;
+            color: #8899aa;
+            font-weight: 400;
+        }
+        .header .event-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 18px;
+            background: rgba(96,165,250,0.15);
+            border: 1px solid rgba(96,165,250,0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #60a5fa;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #8899aa;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .timeline-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Central timeline line */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #60a5fa, #a78bfa, #f472b6, #34d399);
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        .phase {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .phase-header {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 24px;
+        }
+        .phase-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .phase-badge.prep { background: linear-gradient(135deg, #1e3a5f, #2563eb); color: #93c5fd; border: 1px solid #3b82f6; }
+        .phase-badge.setup { background: linear-gradient(135deg, #2d1b4e, #7c3aed); color: #c4b5fd; border: 1px solid #8b5cf6; }
+        .phase-badge.wave1 { background: linear-gradient(135deg, #4a1942, #db2777); color: #f9a8d4; border: 1px solid #ec4899; }
+        .phase-badge.followup { background: linear-gradient(135deg, #1a3a2a, #059669); color: #6ee7b7; border: 1px solid #10b981; }
+        .phase-badge.final { background: linear-gradient(135deg, #3b2f0a, #d97706); color: #fcd34d; border: 1px solid #f59e0b; }
+        .phase-badge.event { background: linear-gradient(135deg, #3b0a0a, #dc2626); color: #fca5a5; border: 1px solid #ef4444; }
+        .phase-dates {
+            font-size: 0.78rem;
+            color: #6b7f94;
+            margin-top: 6px;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .step-row.left .step-card {
+            margin-right: auto;
+            margin-left: 0;
+            width: calc(50% - 36px);
+        }
+        .step-row.right .step-card {
+            margin-left: auto;
+            margin-right: 0;
+            width: calc(50% - 36px);
+        }
+
+        /* Timeline node */
+        .step-row::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 18px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            border: 2px solid;
+        }
+        .step-row.channel-email::before { background: #3b82f6; border-color: #60a5fa; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+        .step-row.channel-linkedin::before { background: #8b5cf6; border-color: #a78bfa; box-shadow: 0 0 12px rgba(139,92,246,0.5); }
+        .step-row.channel-action::before { background: #f59e0b; border-color: #fbbf24; box-shadow: 0 0 12px rgba(245,158,11,0.5); }
+        .step-row.channel-milestone::before { background: #ef4444; border-color: #f87171; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+        .step-row.channel-data::before { background: #10b981; border-color: #34d399; box-shadow: 0 0 12px rgba(16,185,129,0.5); }
+
+        /* Connector arm */
+        .step-row.left::after, .step-row.right::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            height: 2px;
+            z-index: 1;
+        }
+        .step-row.left::after {
+            left: calc(50% - 36px);
+            width: 30px;
+            background: linear-gradient(to left, rgba(255,255,255,0.2), transparent);
+            right: auto;
+        }
+        .step-row.right::after {
+            left: calc(50% + 7px);
+            width: 30px;
+            background: linear-gradient(to right, rgba(255,255,255,0.2), transparent);
+        }
+
+        .step-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px 18px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .step-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .step-date {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .step-date.email { color: #60a5fa; }
+        .step-date.linkedin { color: #a78bfa; }
+        .step-date.action { color: #fbbf24; }
+        .step-date.milestone { color: #f87171; }
+        .step-date.data { color: #34d399; }
+
+        .step-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #f0f4f8;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .step-desc {
+            font-size: 0.8rem;
+            color: #8899aa;
+            line-height: 1.5;
+        }
+
+        .step-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 8px;
+        }
+        .tag-instantly { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+        .tag-heyreach { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+        .tag-manual { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+        .tag-apollo { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .tag-critical { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+        .dual-track {
+            display: flex;
+            gap: 0;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .dual-track .step-card {
+            width: calc(50% - 36px);
+        }
+        .dual-track .step-card:first-child { margin-right: auto; }
+        .dual-track .step-card:last-child { margin-left: auto; }
+        .dual-track::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 18px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: 2px solid #a78bfa;
+            box-shadow: 0 0 12px rgba(139,92,246,0.5);
+        }
+        .dual-track::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: calc(50% - 36px);
+            width: 72px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            z-index: 1;
+        }
+
+        .decision-diamond {
+            text-align: center;
+            margin: 20px auto;
+            position: relative;
+            z-index: 2;
+        }
+        .diamond-box {
+            display: inline-block;
+            padding: 10px 24px;
+            background: rgba(245,158,11,0.1);
+            border: 1px dashed rgba(245,158,11,0.4);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #fbbf24;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer p {
+            font-size: 0.75rem;
+            color: #4a5f77;
+        }
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line { left: 20px; }
+            .step-row.left .step-card, .step-row.right .step-card {
+                width: calc(100% - 50px);
+                margin-left: 50px;
+                margin-right: 0;
+            }
+            .step-row::before { left: 20px; }
+            .step-row.left::after, .step-row.right::after {
+                left: 28px;
+                width: 22px;
+            }
+            .dual-track { flex-direction: column; gap: 12px; }
+            .dual-track .step-card { width: calc(100% - 50px); margin-left: 50px !important; margin-right: 0 !important; }
+            .dual-track::before { left: 20px; }
+            .dual-track::after { left: 28px; width: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>MDF NYC Stride Dinner — Outreach Workflow</h1>
+    <div class="subtitle">Alternative Payments × Stride Accounting | Instantly + heyReach</div>
+    <div class="event-badge">Event: Thursday, April 16, 2026 &nbsp;|&nbsp; MSP Decision Makers &nbsp;|&nbsp; NYC</div>
+</div>
+
+<div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Email (Instantly)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> LinkedIn (heyReach)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Data / Enrichment</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Manual Action</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Milestone / Event</div>
+</div>
+
+<div class="timeline-container">
+    <div class="timeline-line"></div>
+
+    <!-- PHASE 1: DATA PREP -->
+    <div class="phase">
+        <div class="phase-header">
+            <div class="phase-badge prep">Phase 1 — Data Prep</div>
+            <div class="phase-dates">March 24–26 (Mon–Wed)</div>
+        </div>
+
+        <div class="step-row left channel-data">
+            <div class="step-card">
+                <div class="step-date data">Mon, Mar 24</div>
+                <div class="step-title">Apollo Enrichment — Prospects</div>
+                <div class="step-desc">Run Apollo People Search on all ~50 prospect domains. Export verified decision-maker emails. Filter by title: CEO, CTO, Owner, President, VP.</div>
+                <span class="step-tag tag-apollo">Apollo</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-data">
+            <div class="step-card">
+                <div class="step-date data">Mon, Mar 24</div>
+                <div class="step-title">Apollo Enrichment — Customers</div>
+                <div class="step-desc">Enrich all 20 customer companies. Find decision-maker emails + LinkedIn profiles. Cross-reference with HubSpot/CRM for existing contacts.</div>
+                <span class="step-tag tag-apollo">Apollo</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-action">
+            <div class="step-card">
+                <div class="step-date action">Mon, Mar 24</div>
+                <div class="step-title">Share Lists with Stride (Becky)</div>
+                <div class="step-desc">Send both lists to Becky. Ask her to add Stride's own contacts/customers and confirm her outreach plan and timing.</div>
+                <span class="step-tag tag-manual">Manual</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-action">
+            <div class="step-card">
+                <div class="step-date action">Tue, Mar 25</div>
+                <div class="step-title">Customer LinkedIn Lookup</div>
+                <div class="step-desc">Find LinkedIn profile URLs for all 20 customer decision-makers (not currently in the spreadsheet). Needed for heyReach follow-up later.</div>
+                <span class="step-tag tag-manual">Manual</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-data">
+            <div class="step-card">
+                <div class="step-date data">Wed, Mar 26</div>
+                <div class="step-title">Finalize Clean Lists</div>
+                <div class="step-desc">Merge Apollo results into master sheet. Create 2 clean CSVs: (1) Customers with email + LI, (2) Prospects with email + LI. Remove bounced/unverified emails.</div>
+                <span class="step-tag tag-critical">Critical Path</span>
+            </div>
+        </div>
+
+        <div class="decision-diamond">
+            <div class="diamond-box">⚠ Check: Named Accounts BDR — carve out their customers before loading into Instantly</div>
+        </div>
+    </div>
+
+    <!-- PHASE 2: CAMPAIGN SETUP -->
+    <div class="phase">
+        <div class="phase-header">
+            <div class="phase-badge setup">Phase 2 — Campaign Setup</div>
+            <div class="phase-dates">March 26–27 (Thu–Fri)</div>
+        </div>
+
+        <div class="step-row right channel-linkedin">
+            <div class="step-card">
+                <div class="step-date linkedin">Thu, Mar 26</div>
+                <div class="step-title">heyReach: Launch Prospect LinkedIn Campaign</div>
+                <div class="step-desc">Upload 50 prospects via LinkedIn URLs. Start connection requests with personalized note about the dinner. Limit: 15-20 requests/day.</div>
+                <span class="step-tag tag-heyreach">heyReach</span> <span class="step-tag tag-critical">Go Live</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-action">
+            <div class="step-card">
+                <div class="step-date action">Thu, Mar 26</div>
+                <div class="step-title">Finalize All Email + LI Copy</div>
+                <div class="step-desc">Lock in email sequences (3 emails × 2 audiences) and LinkedIn messages (2 steps × 2 audiences). Insert venue details.</div>
+                <span class="step-tag tag-manual">Manual</span>
+            </div>
+        </div>
+
+        <div class="dual-track">
+            <div class="step-card">
+                <div class="step-date email">Fri, Mar 27</div>
+                <div class="step-title">Instantly: Create Customer Campaign</div>
+                <div class="step-desc">Upload customer CSV. Set 3-step sequence. Enable "Stop on Reply." Sending window: 8-11am ET.</div>
+                <span class="step-tag tag-instantly">Instantly</span>
+            </div>
+            <div class="step-card">
+                <div class="step-date email">Fri, Mar 27</div>
+                <div class="step-title">Instantly: Create Prospect Campaign</div>
+                <div class="step-desc">Upload prospect CSV. Set 3-step sequence. Daily limit: 30-40 emails. Send test emails to verify.</div>
+                <span class="step-tag tag-instantly">Instantly</span>
+            </div>
+        </div>
+
+        <div class="decision-diamond">
+            <div class="diamond-box">✅ Pre-Flight: Test emails sent? Merge fields correct? Venue details in copy? Deliverability OK?</div>
+        </div>
+    </div>
+
+    <!-- PHASE 3: WAVE 1 -->
+    <div class="phase">
+        <div class="phase-header">
+            <div class="phase-badge wave1">Phase 3 — Outreach Wave 1</div>
+            <div class="phase-dates">March 28–29 (Sat–Sun)</div>
+        </div>
+
+        <div class="step-row right channel-email">
+            <div class="step-card">
+                <div class="step-date email">Sat, Mar 28</div>
+                <div class="step-title">📧 EMAIL 1: Initial Dinner Invite</div>
+                <div class="step-desc">Instantly sends Email 1 to BOTH Customer and Prospect lists. Saturday morning send (8-10am ET) — lands in inbox when competition is low. Warm, personal, exclusive tone. RSVP = reply to email.</div>
+                <span class="step-tag tag-instantly">Instantly</span> <span class="step-tag tag-critical">Key Moment</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-linkedin">
+            <div class="step-card">
+                <div class="step-date linkedin">Sat–Mon, Mar 28-30</div>
+                <div class="step-title">heyReach: Prospect Connections Continue</div>
+                <div class="step-desc">Remaining connection requests drip out (15-20/day). By Monday, all ~50 prospects should have received a connection request.</div>
+                <span class="step-tag tag-heyreach">heyReach — Auto</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PHASE 4: FOLLOW-UPS -->
+    <div class="phase">
+        <div class="phase-header">
+            <div class="phase-badge followup">Phase 4 — Follow-Up Waves</div>
+            <div class="phase-dates">March 30 – April 12</div>
+        </div>
+
+        <div class="step-row right channel-linkedin">
+            <div class="step-card">
+                <div class="step-date linkedin">Wed, Apr 1</div>
+                <div class="step-title">heyReach: Prospect LI Follow-Up Message</div>
+                <div class="step-desc">Auto follow-up message to prospects who accepted the connection request. Reference the email invite. "Would love to save you a seat."</div>
+                <span class="step-tag tag-heyreach">heyReach — Auto</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-email">
+            <div class="step-card">
+                <div class="step-date email">Wed, Apr 2</div>
+                <div class="step-title">📧 EMAIL 2: Follow-Up (Both Lists)</div>
+                <div class="step-desc">Instantly sends Email 2 to non-responders. 5 days after Email 1. Mentions confirmed attendees, reinforces exclusivity. "Just reply 'in' to hold a spot."</div>
+                <span class="step-tag tag-instantly">Instantly — Auto</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-linkedin">
+            <div class="step-card">
+                <div class="step-date linkedin">Thu, Apr 3</div>
+                <div class="step-title">heyReach: Launch Customer LI Campaign</div>
+                <div class="step-desc">Only for customers who haven't replied to emails. Send connection request + note. This is the "nudge" channel for warm contacts.</div>
+                <span class="step-tag tag-heyreach">heyReach</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-linkedin">
+            <div class="step-card">
+                <div class="step-date linkedin">Mon, Apr 7</div>
+                <div class="step-title">heyReach: Customer LI Follow-Up DM</div>
+                <div class="step-desc">Follow-up LinkedIn message to customer connections who still haven't RSVP'd. "A few of your peers are already confirmed."</div>
+                <span class="step-tag tag-heyreach">heyReach — Auto</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-email">
+            <div class="step-card">
+                <div class="step-date email">Thu, Apr 9</div>
+                <div class="step-title">📧 EMAIL 3: Final Reminder / Urgency</div>
+                <div class="step-desc">Instantly sends Email 3 to remaining non-responders. "Closing out the guest list." Mentions limited seats. RSVP deadline: Friday April 10.</div>
+                <span class="step-tag tag-instantly">Instantly — Auto</span> <span class="step-tag tag-critical">Last Email</span>
+            </div>
+        </div>
+
+        <div class="decision-diamond">
+            <div class="diamond-box">📊 Check RSVP Count: If &lt;10 confirmed → expand prospect list to 100 via Apollo &amp; ask attendees to bring a peer</div>
+        </div>
+    </div>
+
+    <!-- PHASE 5: FINAL PUSH -->
+    <div class="phase">
+        <div class="phase-header">
+            <div class="phase-badge final">Phase 5 — Final Push</div>
+            <div class="phase-dates">April 10–15</div>
+        </div>
+
+        <div class="step-row left channel-milestone">
+            <div class="step-card">
+                <div class="step-date milestone">Fri, Apr 10</div>
+                <div class="step-title">🎯 RSVP Soft Deadline</div>
+                <div class="step-desc">Review all RSVPs. Final headcount check. Confirm customer vs. prospect mix (target: 75/25 split). Coordinate with Stride on their confirmed attendees.</div>
+                <span class="step-tag tag-critical">Milestone</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-action">
+            <div class="step-card">
+                <div class="step-date action">Mon, Apr 13</div>
+                <div class="step-title">Send Confirmation Emails to Attendees</div>
+                <div class="step-desc">Personal email to all confirmed guests with: venue name &amp; address, time, dress code, parking/transit info, and what to expect.</div>
+                <span class="step-tag tag-manual">Manual — Personal</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-action">
+            <div class="step-card">
+                <div class="step-date action">Tue, Apr 14</div>
+                <div class="step-title">Sync with Stride (Becky)</div>
+                <div class="step-desc">Merge Stride's confirmed attendees into the Attendees sheet. Final headcount. Discuss seating, logistics, any last-minute changes.</div>
+                <span class="step-tag tag-manual">Manual</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-action">
+            <div class="step-card">
+                <div class="step-date action">Wed, Apr 15</div>
+                <div class="step-title">Day-Before Reminder</div>
+                <div class="step-desc">"Looking forward to seeing you tomorrow!" — via email or LinkedIn DM to all confirmed attendees. Quick, friendly, builds anticipation.</div>
+                <span class="step-tag tag-manual">Manual</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PHASE 6: EVENT -->
+    <div class="phase">
+        <div class="phase-header">
+            <div class="phase-badge event">Phase 6 — Event Day &amp; Follow-Up</div>
+            <div class="phase-dates">April 16+</div>
+        </div>
+
+        <div class="step-row left channel-milestone">
+            <div class="step-card">
+                <div class="step-date milestone">Thu, Apr 16</div>
+                <div class="step-title">🍽️ DINNER — EVENT DAY</div>
+                <div class="step-desc">Dinner takes place. Onsite AE claims ownership of leads they directly engage with. Collect business cards, note key conversations and follow-up actions.</div>
+                <span class="step-tag tag-critical">Event</span>
+            </div>
+        </div>
+
+        <div class="step-row right channel-action">
+            <div class="step-card">
+                <div class="step-date action">Fri, Apr 17</div>
+                <div class="step-title">Lead Distribution</div>
+                <div class="step-desc">Update Attendees sheet with who actually showed. Distribute leads: AE keeps direct contacts, remainder split to PDR + Named Accounts BDR for follow-up.</div>
+                <span class="step-tag tag-manual">Manual</span>
+            </div>
+        </div>
+
+        <div class="step-row left channel-email">
+            <div class="step-card">
+                <div class="step-date email">Mon, Apr 20</div>
+                <div class="step-title">Thank-You Follow-Up Emails</div>
+                <div class="step-desc">Personal thank-you to every attendee. Include any shared resources, recap of key discussion points, and next-step meeting requests where appropriate.</div>
+                <span class="step-tag tag-manually">Manual + Instantly</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>Alternative Payments — Partnerships Team &nbsp;|&nbsp; MDF NYC Stride Dinner 2026 &nbsp;|&nbsp; Created March 23, 2026</p>
+    <p style="margin-top: 6px;">Channels: <a href="#">Instantly</a> (Email) &nbsp;+ &nbsp;<a href="#">heyReach</a> (LinkedIn) &nbsp;|&nbsp; Co-Host: Stride Accounting</p>
+</div>
+
+</body>
+</html>
