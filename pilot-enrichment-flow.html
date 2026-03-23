@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Email Enrichment — 20-Account Pilot Flow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', system-ui, sans-serif; padding: 40px 20px; }
+        h1 { text-align: center; font-size: 24px; margin-bottom: 8px; color: #f8fafc; }
+        .subtitle { text-align: center; font-size: 14px; color: #94a3b8; margin-bottom: 40px; }
+        .flow-container { max-width: 1200px; margin: 0 auto; }
+
+        .phase { margin-bottom: 50px; }
+        .phase-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 24px; padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        .phase-number {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 16px; color: #fff; flex-shrink: 0;
+        }
+        .phase-title { font-size: 18px; font-weight: 600; }
+        .phase-desc { font-size: 12px; color: #94a3b8; margin-left: auto; font-style: italic; }
+
+        .phase-1 .phase-number { background: #3b82f6; }
+        .phase-1 .phase-title { color: #93c5fd; }
+        .phase-2 .phase-number { background: #8b5cf6; }
+        .phase-2 .phase-title { color: #c4b5fd; }
+        .phase-3 .phase-number { background: #f59e0b; }
+        .phase-3 .phase-title { color: #fcd34d; }
+        .phase-4 .phase-number { background: #10b981; }
+        .phase-4 .phase-title { color: #6ee7b7; }
+        .phase-5 .phase-number { background: #06b6d4; }
+        .phase-5 .phase-title { color: #67e8f9; }
+        .phase-6 .phase-number { background: #f43f5e; }
+        .phase-6 .phase-title { color: #fda4af; }
+        .phase-7 .phase-number { background: #84cc16; }
+        .phase-7 .phase-title { color: #bef264; }
+
+        .flow-row { display: flex; align-items: stretch; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+        .flow-row.center { justify-content: center; }
+
+        .node {
+            border-radius: 12px; padding: 16px 20px;
+            min-width: 200px; max-width: 340px; flex: 1;
+        }
+        .node-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; opacity: 0.7; }
+        .node-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .node-detail { font-size: 12px; opacity: 0.85; line-height: 1.6; }
+        .node code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+
+        .node-hubspot { background: linear-gradient(135deg, #1e3a5f, #1a365d); border: 1px solid #3b82f6; }
+        .node-clay { background: linear-gradient(135deg, #422006, #451a03); border: 1px solid #f59e0b; }
+        .node-apollo { background: linear-gradient(135deg, #312e81, #3730a3); border: 1px solid #818cf8; }
+        .node-rocketreach { background: linear-gradient(135deg, #064e3b, #065f46); border: 1px solid #10b981; }
+        .node-logic { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #8b5cf6; }
+        .node-gate { background: linear-gradient(135deg, #7f1d1d, #991b1b); border: 1px solid #ef4444; }
+        .node-salesforce { background: linear-gradient(135deg, #0c4a6e, #075985); border: 1px solid #38bdf8; }
+        .node-success { background: linear-gradient(135deg, #14532d, #166534); border: 1px solid #22c55e; }
+        .node-checkpoint { background: linear-gradient(135deg, #713f12, #854d0e); border: 2px dashed #fbbf24; }
+
+        .arrow-down { display: flex; justify-content: center; padding: 8px 0; }
+        .arrow-down svg { width: 24px; height: 32px; }
+        .arrow-down path { fill: none; stroke: #475569; stroke-width: 2; }
+        .arrow-down polygon { fill: #475569; }
+
+        .waterfall-bar {
+            background: linear-gradient(90deg, #1e40af, #7c3aed, #059669);
+            border-radius: 8px; padding: 10px 20px;
+            text-align: center; font-size: 12px; font-weight: 600;
+            color: #e0f2fe; letter-spacing: 0.5px;
+            margin: 8px 0 16px 0;
+        }
+
+        .decision {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            border: 2px solid #ef4444; border-radius: 12px;
+            padding: 16px 24px; text-align: center;
+            max-width: 420px; margin: 0 auto;
+        }
+        .decision .node-title { color: #fca5a5; }
+        .decision .node-detail { color: #fecaca; }
+
+        .branch { display: flex; gap: 16px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+        .branch-path { text-align: center; flex: 1; max-width: 320px; }
+        .branch-label {
+            font-size: 12px; font-weight: 600; padding: 4px 12px;
+            border-radius: 20px; display: inline-block; margin-bottom: 8px;
+        }
+        .branch-yes { background: #166534; color: #86efac; }
+        .branch-no { background: #991b1b; color: #fca5a5; }
+
+        .legend { display: flex; gap: 20px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #94a3b8; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .dot-hubspot { background: #3b82f6; }
+        .dot-clay { background: #f59e0b; }
+        .dot-apollo { background: #818cf8; }
+        .dot-rocketreach { background: #10b981; }
+        .dot-logic { background: #8b5cf6; }
+        .dot-gate { background: #ef4444; }
+        .dot-salesforce { background: #38bdf8; }
+        .dot-checkpoint { background: #fbbf24; }
+
+        .stats-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
+        .stat-badge {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; padding: 8px 14px; text-align: center; min-width: 120px;
+        }
+        .stat-value { font-size: 18px; font-weight: 700; color: #f8fafc; }
+        .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        @media (max-width: 768px) {
+            .flow-row { flex-direction: column; align-items: center; }
+            .node { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Personal Email Enrichment — 20-Account Pilot</h1>
+    <p class="subtitle">Alternative Payments | Waterfall: Accounts → Apollo → RocketReach → HubSpot → Salesforce</p>
+
+    <div class="stats-row">
+        <div class="stat-badge"><div class="stat-value">20</div><div class="stat-label">Accounts</div></div>
+        <div class="stat-badge"><div class="stat-value">≤400</div><div class="stat-label">Max Contacts</div></div>
+        <div class="stat-badge"><div class="stat-value">7</div><div class="stat-label">Phases</div></div>
+        <div class="stat-badge"><div class="stat-value">4</div><div class="stat-label">Tools</div></div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot dot-hubspot"></div> HubSpot</div>
+        <div class="legend-item"><div class="legend-dot dot-clay"></div> Clay</div>
+        <div class="legend-item"><div class="legend-dot dot-apollo"></div> Apollo</div>
+        <div class="legend-item"><div class="legend-dot dot-rocketreach"></div> RocketReach</div>
+        <div class="legend-item"><div class="legend-dot dot-logic"></div> Formula / Logic</div>
+        <div class="legend-item"><div class="legend-dot dot-gate"></div> Gate / Decision</div>
+        <div class="legend-item"><div class="legend-dot dot-salesforce"></div> Salesforce</div>
+        <div class="legend-item"><div class="legend-dot dot-checkpoint"></div> Checkpoint</div>
+    </div>
+
+    <div class="flow-container">
+
+        <!-- PHASE 1 -->
+        <div class="phase phase-1">
+            <div class="phase-header">
+                <div class="phase-number">1</div>
+                <div class="phase-title">HubSpot Setup</div>
+                <div class="phase-desc">Do this first — one-time config</div>
+            </div>
+            <div class="flow-row">
+                <div class="node node-hubspot">
+                    <div class="node-label">Create Property</div>
+                    <div class="node-title"><code>audience_segment</code></div>
+                    <div class="node-detail">Dropdown: msp_us, msp_named_accounts, msp_canada, accounting_us</div>
+                </div>
+                <div class="node node-hubspot">
+                    <div class="node-label">Create Property</div>
+                    <div class="node-title"><code>pilot_batch</code></div>
+                    <div class="node-detail">Single-line text. Tracks which pilot batch (pilot_1, pilot_2, etc.)</div>
+                </div>
+                <div class="node node-hubspot">
+                    <div class="node-label">Verify Built-in</div>
+                    <div class="node-title"><code>hs_additional_emails</code> + LinkedIn</div>
+                    <div class="node-detail">Confirm both fields exist. Note LinkedIn's exact internal name.</div>
+                </div>
+                <div class="node node-hubspot" style="border-color: #a78bfa;">
+                    <div class="node-label">Workflow</div>
+                    <div class="node-title">Marketing Contact Auto-Set</div>
+                    <div class="node-detail">Trigger: audience_segment is known → Action: Set as Marketing Contact</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 2 -->
+        <div class="phase phase-2">
+            <div class="phase-header">
+                <div class="phase-number">2</div>
+                <div class="phase-title">Create Pilot Table & Select Accounts</div>
+                <div class="phase-desc">Clay setup — starts from scratch</div>
+            </div>
+            <div class="flow-row center">
+                <div class="node node-clay">
+                    <div class="node-label">Existing Table</div>
+                    <div class="node-title">Contact ICP Table (26,178 rows)</div>
+                    <div class="node-detail">Source for picking 20 random unique Company Domains. No data is copied — only domains extracted.</div>
+                </div>
+            </div>
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+            <div style="text-align: center; font-size: 11px; color: #94a3b8; margin-bottom: 8px;">Pick 20 random unique domains</div>
+            <div class="flow-row center">
+                <div class="node node-clay" style="max-width: 500px;">
+                    <div class="node-label">New Table</div>
+                    <div class="node-title">Pilot — Personal Email Enrichment v1</div>
+                    <div class="node-detail">
+                        Created in US MSP folder. Starts with 20 rows — one per company domain.<br><br>
+                        <strong>Columns:</strong> <code>company_domain</code> (input), <code>segment</code> = "msp_us", <code>pilot_batch</code> = "pilot_1"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WATERFALL MARKER -->
+        <div class="waterfall-bar">⬇ WATERFALL EXECUTION BEGINS — Each step completes for ALL rows before next step starts ⬇</div>
+
+        <!-- PHASE 3 -->
+        <div class="phase phase-3">
+            <div class="phase-header">
+                <div class="phase-number">3</div>
+                <div class="phase-title">Apollo Enrichment</div>
+                <div class="phase-desc">Waterfall Steps 1-2: Discover + Enrich contacts</div>
+            </div>
+            <div class="flow-row center">
+                <div class="node node-apollo" style="max-width: 500px;">
+                    <div class="node-label">Apollo Search People</div>
+                    <div class="node-title">Discover ICP Contacts at 20 Accounts</div>
+                    <div class="node-detail">
+                        <strong>Input:</strong> <code>company_domain</code> + ICP filters (title/department)<br>
+                        <strong>Limit:</strong> Max 20 contacts per account<br>
+                        <strong>Creates sub-rows:</strong> Each account expands into multiple contact rows<br><br>
+                        <strong>Output per contact:</strong> First Name, Last Name, Job Title, Work Email, LinkedIn URL, Company Name
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <div class="stats-row">
+                <div class="stat-badge"><div class="stat-value">20</div><div class="stat-label">Accounts In</div></div>
+                <div class="stat-badge"><div class="stat-value">→</div><div class="stat-label"></div></div>
+                <div class="stat-badge"><div class="stat-value">≤400</div><div class="stat-label">Contacts Out</div></div>
+            </div>
+
+            <div class="flow-row center">
+                <div class="node node-checkpoint" style="max-width: 500px; text-align: center;">
+                    <div class="node-label" style="color: #fbbf24;">⚠ Checkpoint</div>
+                    <div class="node-title" style="color: #fef3c7;">Verify Apollo Data Before Proceeding</div>
+                    <div class="node-detail" style="color: #fde68a;">
+                        All 20 accounts searched? ✓<br>
+                        Sub-rows created with contacts? ✓<br>
+                        First Name, Last Name populated? ✓<br>
+                        Work Email + LinkedIn present? ✓<br>
+                        Job titles match ICP criteria? ✓
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 4 -->
+        <div class="phase phase-4">
+            <div class="phase-header">
+                <div class="phase-number">4</div>
+                <div class="phase-title">RocketReach Enrichment</div>
+                <div class="phase-desc">Waterfall Step 3: Personal email discovery</div>
+            </div>
+            <div class="flow-row center">
+                <div class="node node-rocketreach" style="max-width: 500px;">
+                    <div class="node-label">RocketReach Person Lookup</div>
+                    <div class="node-title">Enrich ALL Contacts for Personal Email</div>
+                    <div class="node-detail">
+                        <strong>Inputs (all available data):</strong><br>
+                        First Name + Last Name + Company Domain + LinkedIn URL + Apollo Work Email<br><br>
+                        <strong>Outputs:</strong> Personal emails, additional work emails, confidence score
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <!-- Formula columns -->
+            <div class="flow-row">
+                <div class="node node-logic">
+                    <div class="node-label">Formula</div>
+                    <div class="node-title"><code>rr_personal_email</code></div>
+                    <div class="node-detail">Emails from gmail, yahoo, outlook, hotmail, etc. → HubSpot additional emails</div>
+                </div>
+                <div class="node node-logic">
+                    <div class="node-label">Formula</div>
+                    <div class="node-title"><code>rr_work_email</code></div>
+                    <div class="node-detail">Corporate domain emails from RocketReach → fallback primary or additional</div>
+                </div>
+                <div class="node node-logic">
+                    <div class="node-label">Formula</div>
+                    <div class="node-title"><code>best_primary_email</code></div>
+                    <div class="node-detail">Apollo Email preferred → else RR work email → else blank</div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <!-- Gate -->
+            <div class="flow-row center">
+                <div class="decision">
+                    <div class="node-label" style="color: #fca5a5;">Gate</div>
+                    <div class="node-title"><code>push_eligible</code> Check</div>
+                    <div class="node-detail">Does the contact have at least ONE email?<br>(Apollo Email OR rr_personal_email OR rr_work_email)</div>
+                </div>
+            </div>
+
+            <div class="branch">
+                <div class="branch-path">
+                    <span class="branch-label branch-yes">YES — Has email(s)</span>
+                    <div class="node node-success" style="margin-top: 8px;">
+                        <div class="node-title">→ Proceed to HubSpot Push</div>
+                        <div class="node-detail">Contact is eligible. Has at least one email for identification.</div>
+                    </div>
+                </div>
+                <div class="branch-path">
+                    <span class="branch-label branch-no">NO — Zero emails</span>
+                    <div class="node node-gate" style="margin-top: 8px;">
+                        <div class="node-title">⛔ SKIP — Do Not Push</div>
+                        <div class="node-detail">No email from any source. Cannot identify or dedup in HubSpot.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-row center">
+                <div class="node node-checkpoint" style="max-width: 500px; text-align: center;">
+                    <div class="node-label" style="color: #fbbf24;">⚠ Checkpoint</div>
+                    <div class="node-title" style="color: #fef3c7;">Verify All Enrichment Before Push</div>
+                    <div class="node-detail" style="color: #fde68a;">
+                        RocketReach 100% complete? ✓<br>
+                        Formula columns computed? ✓<br>
+                        push_eligible populated on all rows? ✓<br>
+                        segment + pilot_batch on all rows? ✓
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 5 -->
+        <div class="phase phase-5">
+            <div class="phase-header">
+                <div class="phase-number">5</div>
+                <div class="phase-title">Clay → HubSpot Push</div>
+                <div class="phase-desc">Waterfall Step 4: Push eligible contacts</div>
+            </div>
+
+            <div class="flow-row center">
+                <div class="node node-clay" style="max-width: 500px;">
+                    <div class="node-label">Clay Action</div>
+                    <div class="node-title">HubSpot: Create or Update Contact</div>
+                    <div class="node-detail">
+                        <strong>Filter:</strong> Only rows where <code>push_eligible</code> = yes<br>
+                        <strong>Match/Dedup:</strong> <code>best_primary_email</code> → Fallback: Full Name + Company Domain
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <!-- Field mapping -->
+            <div class="flow-row">
+                <div class="node node-hubspot">
+                    <div class="node-label">HubSpot</div>
+                    <div class="node-title"><code>email</code> (Primary)</div>
+                    <div class="node-detail">← <code>best_primary_email</code><br>Apollo work email preferred, else RR work email</div>
+                </div>
+                <div class="node node-hubspot">
+                    <div class="node-label">HubSpot</div>
+                    <div class="node-title"><code>hs_additional_emails</code></div>
+                    <div class="node-detail">← <code>rr_personal_email</code> + <code>rr_work_email</code><br>All personal + extra work emails</div>
+                </div>
+                <div class="node node-hubspot">
+                    <div class="node-label">HubSpot</div>
+                    <div class="node-title">LinkedIn + Segment + Pilot</div>
+                    <div class="node-detail">← LinkedIn URL<br>← <code>audience_segment</code> = msp_us<br>← <code>pilot_batch</code> = pilot_1</div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <div class="branch">
+                <div class="branch-path">
+                    <span class="branch-label" style="background: #1e40af; color: #93c5fd;">NEW Contact</span>
+                    <div class="node node-hubspot" style="margin-top: 8px;">
+                        <div class="node-title">Create in HubSpot</div>
+                        <div class="node-detail">All fields: email, name, title, company, additional emails, LinkedIn, segment, pilot_batch</div>
+                    </div>
+                </div>
+                <div class="branch-path">
+                    <span class="branch-label" style="background: #1e40af; color: #93c5fd;">EXISTING Contact</span>
+                    <div class="node node-hubspot" style="margin-top: 8px;">
+                        <div class="node-title">Update in HubSpot</div>
+                        <div class="node-detail">Only: additional emails, LinkedIn, segment, pilot_batch. Do NOT overwrite primary email/name/title.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <div class="flow-row center">
+                <div class="node node-hubspot" style="border-color: #a78bfa; max-width: 400px; text-align: center;">
+                    <div class="node-label">Auto Workflow</div>
+                    <div class="node-title">Set as Marketing Contact</div>
+                    <div class="node-detail">Triggered automatically by audience_segment being set. Required for future ad audience sync.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 6 -->
+        <div class="phase phase-6">
+            <div class="phase-header">
+                <div class="phase-number">6</div>
+                <div class="phase-title">Auto: Salesforce Sync</div>
+                <div class="phase-desc">Happens automatically — no manual action</div>
+            </div>
+            <div class="flow-row center">
+                <div class="node node-salesforce" style="max-width: 500px; text-align: center;">
+                    <div class="node-label">Automatic</div>
+                    <div class="node-title">HubSpot → Salesforce Two-Way Sync</div>
+                    <div class="node-detail">Existing HS↔SF sync handles this. New contacts become Leads. Existing contacts updated. No manual action needed.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 7 -->
+        <div class="phase phase-7">
+            <div class="phase-header">
+                <div class="phase-number">7</div>
+                <div class="phase-title">Validation & Go/No-Go</div>
+            </div>
+            <div class="flow-row">
+                <div class="node node-success">
+                    <div class="node-label">Check</div>
+                    <div class="node-title">Contacts Exist</div>
+                    <div class="node-detail">Filter HubSpot by pilot_batch = pilot_1. Count matches expected.</div>
+                </div>
+                <div class="node node-success">
+                    <div class="node-label">Check</div>
+                    <div class="node-title">Additional Emails</div>
+                    <div class="node-detail">Personal emails in hs_additional_emails. Different from primary.</div>
+                </div>
+                <div class="node node-success">
+                    <div class="node-label">Check</div>
+                    <div class="node-title">No Duplicates</div>
+                    <div class="node-detail">Existing contacts updated not duplicated. Primary fields intact.</div>
+                </div>
+            </div>
+            <div class="flow-row" style="margin-top: 12px;">
+                <div class="node node-success">
+                    <div class="node-label">Check</div>
+                    <div class="node-title">Marketing Status</div>
+                    <div class="node-detail">All contacts are Marketing Contacts via workflow.</div>
+                </div>
+                <div class="node node-success">
+                    <div class="node-label">Check</div>
+                    <div class="node-title">Skipped Correctly</div>
+                    <div class="node-detail">push_eligible = no contacts NOT in HubSpot.</div>
+                </div>
+                <div class="node node-success">
+                    <div class="node-label">Check</div>
+                    <div class="node-title">Salesforce Synced</div>
+                    <div class="node-detail">Pilot contacts appear in Salesforce.</div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <div class="flow-row center">
+                <div class="decision" style="background: linear-gradient(135deg, #14532d, #166534); border-color: #22c55e; max-width: 550px;">
+                    <div class="node-label" style="color: #86efac;">Decision</div>
+                    <div class="node-title" style="color: #bbf7d0; font-size: 18px;">GO / NO-GO</div>
+                    <div class="node-detail" style="color: #d1fae5; margin-top: 8px;">
+                        <strong>GO:</strong> Apollo ≥5 contacts/acct, work email ≥60%, RR personal ≥30%, 0 dupes, marketing status set<br><br>
+                        <strong>NO-GO:</strong> Fix issues → re-run pilot with next 20 accounts
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><svg viewBox="0 0 24 32"><path d="M12 0 L12 24"/><polygon points="6,24 12,32 18,24"/></svg></div>
+
+            <div class="flow-row center">
+                <div class="node" style="background: linear-gradient(135deg, #4a1d96, #5b21b6); border: 2px solid #a78bfa; max-width: 550px; text-align: center;">
+                    <div class="node-label" style="color: #c4b5fd;">Next</div>
+                    <div class="node-title" style="color: #e9d5ff; font-size: 16px;">Scale to Full Rollout</div>
+                    <div class="node-detail" style="color: #ddd6fe;">
+                        Same waterfall for all 4 verticals (MSP US, MSP Named Accounts, MSP Canada, Accounting US)<br>
+                        → Build HubSpot audience lists per segment<br>
+                        → Sync to Meta / Google / LinkedIn ad platforms
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="text-align: center; margin-top: 60px; color: #475569; font-size: 12px;">
+        Alternative Payments — Personal Email Enrichment Pilot v2.0 — March 2026
+    </div>
+</body>
+</html>
