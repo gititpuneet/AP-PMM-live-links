@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Enrichment Pilot — MSP US Accounts</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a18; font-size: 14px; line-height: 1.6; }
+  .page { max-width: 960px; margin: 0 auto; padding: 40px 32px 60px; }
+  .header { margin-bottom: 36px; border-bottom: 1px solid #dddcd6; padding-bottom: 20px; }
+  .header h1 { font-size: 22px; font-weight: 600; color: #1a1a18; margin-bottom: 4px; }
+  .header p { font-size: 13px; color: #6b6a65; }
+  .section { margin-bottom: 36px; }
+  .section-title { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .metric { background: #eeede8; border-radius: 8px; padding: 16px 18px; }
+  .metric-val { font-size: 26px; font-weight: 600; color: #1a1a18; line-height: 1; margin-bottom: 6px; }
+  .metric-label { font-size: 12px; color: #6b6a65; }
+  .funnel-wrap { background: #fff; border: 1px solid #e0dfd9; border-radius: 10px; padding: 20px 22px; }
+  .funnel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .funnel-row:last-child { margin-bottom: 0; }
+  .funnel-label { font-size: 12px; color: #6b6a65; min-width: 200px; }
+  .funnel-bar-wrap { flex: 1; background: #f0efe9; border-radius: 4px; height: 22px; overflow: hidden; }
+  .funnel-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 11px; font-weight: 600; color: #fff; }
+  .funnel-n { min-width: 36px; font-size: 12px; font-weight: 600; color: #1a1a18; text-align: right; }
+  .tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tool-card { background: #fff; border: 1px solid #e0dfd9; border-radius: 10px; padding: 16px 18px; }
+  .tool-name { font-size: 13px; font-weight: 600; color: #1a1a18; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+  .badge-win { background: #e1f5ee; color: #0f6e56; }
+  .badge-partial { background: #faeeda; color: #854f0b; }
+  .badge-skip { background: #f1efe8; color: #888780; }
+  .tool-stat { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #f0efe9; }
+  .tool-stat:last-child { border-bottom: none; }
+  .tool-stat-label { color: #6b6a65; }
+  .tool-stat-val { font-weight: 600; color: #1a1a18; }
+  .two-col { grid-template-columns: repeat(2, 1fr) !important; }
+  .rec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .rec-card { background: #fff; border: 1px solid #e0dfd9; border-radius: 10px; padding: 16px 18px; }
+  .rec-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .rec-label { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 99px; }
+  .rec-label-pro { background: #e6f1fb; color: #185fa5; }
+  .rec-label-per { background: #fbeaf0; color: #993556; }
+  .rec-label-tam { background: #f1efe8; color: #5f5e5a; }
+  .rec-label-val { background: #faeeda; color: #854f0b; }
+  .rec-title { font-size: 13px; font-weight: 600; color: #1a1a18; margin-bottom: 8px; }
+  .rec-list { padding-left: 16px; }
+  .rec-list li { font-size: 12px; color: #444441; line-height: 1.7; }
+  .divider { border: none; border-top: 1px solid #dddcd6; margin: 36px 0; }
+  .mgmt-section { background: #fff; border: 1px solid #e0dfd9; border-radius: 12px; padding: 24px 26px; }
+  .mgmt-section h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .mgmt-section .sub { font-size: 12px; color: #888780; margin-bottom: 20px; }
+  .mgmt-block { margin-bottom: 18px; }
+  .mgmt-block:last-child { margin-bottom: 0; }
+  .mgmt-block-title { font-size: 11px; font-weight: 600; color: #185fa5; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .mgmt-list { padding-left: 18px; }
+  .mgmt-list li { font-size: 13px; color: #1a1a18; line-height: 1.8; }
+  .footer { margin-top: 40px; font-size: 11px; color: #aaa9a3; text-align: center; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>Email Enrichment Pilot — MSP US Accounts</h1>
+    <p>Pilot run across 20 randomly selected accounts from verified TAM list &nbsp;·&nbsp; Tools tested: Apollo.io, RocketReach, Clearbit, People Data Labs</p>
+  </div>
+  <div class="section">
+    <div class="section-title">Pilot scope</div>
+    <div class="metric-row">
+      <div class="metric"><div class="metric-val">20</div><div class="metric-label">MSP US accounts sampled</div></div>
+      <div class="metric"><div class="metric-val">16</div><div class="metric-label">Companies with results (80%)</div></div>
+      <div class="metric"><div class="metric-val">32</div><div class="metric-label">People identified</div></div>
+      <div class="metric"><div class="metric-val">4</div><div class="metric-label">Companies — no results</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Enrichment funnel</div>
+    <div class="funnel-wrap">
+      <div class="funnel-row"><div class="funnel-label">Accounts sampled</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#3266ad;">100%</div></div><div class="funnel-n">20</div></div>
+      <div class="funnel-row"><div class="funnel-label">Companies found (Apollo)</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:80%;background:#4a87c8;">80%</div></div><div class="funnel-n">16</div></div>
+      <div class="funnel-row"><div class="funnel-label">People identified</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#4a87c8;">32 people</div></div><div class="funnel-n">32</div></div>
+      <div class="funnel-row"><div class="funnel-label">Work emails (Apollo)</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:78%;background:#1d9e75;">78%</div></div><div class="funnel-n">25</div></div>
+      <div class="funnel-row"><div class="funnel-label">Work emails (RocketReach)</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:69%;background:#1d9e75;">69%</div></div><div class="funnel-n">22</div></div>
+      <div class="funnel-row"><div class="funnel-label">Personal emails (PDL)</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:50%;background:#D85A30;">50%</div></div><div class="funnel-n">16</div></div>
+      <div class="funnel-row"><div class="funnel-label">Personal emails (RocketReach)</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:41%;background:#E88060;">41%</div></div><div class="funnel-n">13</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Tool comparison — professional email</div>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-name">Apollo.io <span class="badge badge-win">Primary</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Work emails found</span><span class="tool-stat-val">25 / 32</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Hit rate</span><span class="tool-stat-val">78%</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Unique finds</span><span class="tool-stat-val">Highest volume</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">RocketReach <span class="badge badge-win">Complement</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Work emails found</span><span class="tool-stat-val">22 / 32</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Hit rate</span><span class="tool-stat-val">69%</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Unique vs Apollo</span><span class="tool-stat-val">+3 exclusive</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Clearbit <span class="badge badge-skip">Drop</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Work emails found</span><span class="tool-stat-val">Less than Apollo &amp; RR</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Unique finds</span><span class="tool-stat-val">None</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Verdict</span><span class="tool-stat-val">No incremental value</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Tool comparison — personal email</div>
+    <div class="tool-grid two-col">
+      <div class="tool-card">
+        <div class="tool-name">People Data Labs <span class="badge badge-win">Primary</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Personal emails found</span><span class="tool-stat-val">16 / 32</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Hit rate</span><span class="tool-stat-val">50%</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">vs RocketReach</span><span class="tool-stat-val">+3 more people covered</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">RocketReach <span class="badge badge-skip">No Add</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Personal emails found</span><span class="tool-stat-val">13 / 32</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Hit rate</span><span class="tool-stat-val">41%</span></div>
+        <div class="tool-stat"><span class="tool-stat-label">Overlap with PDL</span><span class="tool-stat-val">Same emails, fewer people</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Recommended approach — full TAM rollout (32,000 accounts)</div>
+    <div class="rec-grid">
+      <div class="rec-card">
+        <div class="rec-header"><span class="rec-label rec-label-pro">Professional email</span></div>
+        <div class="rec-title">Apollo.io + RocketReach waterfall</div>
+        <ul class="rec-list">
+          <li>Run Apollo first — 78% hit rate, highest volume</li>
+          <li>Pass Apollo misses to RocketReach (+3 exclusive finds in pilot)</li>
+          <li>Drop Clearbit — zero incremental value</li>
+          <li>Expected combined coverage: ~87–94% of people found</li>
+        </ul>
+      </div>
+      <div class="rec-card">
+        <div class="rec-header"><span class="rec-label rec-label-per">Personal email</span></div>
+        <div class="rec-title">PDL only</div>
+        <ul class="rec-list">
+          <li>PDL is the clear winner — 50% hit rate vs RocketReach 41%</li>
+          <li>RocketReach finds same emails for fewer people — no add</li>
+          <li>Run PDL as sole tool for personal email enrichment</li>
+          <li>Expected coverage: ~50% of identified contacts</li>
+        </ul>
+      </div>
+      <div class="rec-card">
+        <div class="rec-header"><span class="rec-label rec-label-tam">TAM scale</span></div>
+        <div class="rec-title">Scaling to 32,000 accounts</div>
+        <ul class="rec-list">
+          <li>~20% accounts may yield no contacts — plan for ~25,600 active</li>
+          <li>Estimate ~51,200 people at avg 2 per account (pilot ratio)</li>
+          <li>Negotiate bulk API credits with Apollo and PDL upfront</li>
+          <li>RocketReach runs only on Apollo misses — controls cost</li>
+        </ul>
+      </div>
+      <div class="rec-card">
+        <div class="rec-header"><span class="rec-label rec-label-val">Before launch</span></div>
+        <div class="rec-title">Validation steps</div>
+        <ul class="rec-list">
+          <li>Verify deliverability of the 3 RocketReach-exclusive work emails</li>
+          <li>Confirm CAN-SPAM compliance posture for personal email use</li>
+          <li>Tag email source in CRM for deliverability tracking post-send</li>
+          <li>Build deduplication layer before full TAM run begins</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="section">
+    <div class="section-title">Management summary — for sharing with leadership</div>
+    <div class="mgmt-section">
+      <h2>Email Enrichment Pilot — Key Findings &amp; Recommendations</h2>
+      <p class="sub">MSP US TAM · 20-account pilot · Tool benchmark</p>
+      <div class="mgmt-block">
+        <div class="mgmt-block-title">Objective</div>
+        <ul class="mgmt-list">
+          <li>Ran a controlled pilot on 20 randomly selected MSP US accounts to benchmark email enrichment tools before scaling to the full TAM of 32,000 accounts.</li>
+        </ul>
+      </div>
+      <div class="mgmt-block">
+        <div class="mgmt-block-title">Key findings</div>
+        <ul class="mgmt-list">
+          <li>Apollo.io identified contacts at 80% of sampled accounts (16/20) and achieved a 78% professional email hit rate — the strongest single tool tested.</li>
+          <li>RocketReach found 3 professional emails that Apollo missed, making it a valuable gap-fill tool — not a primary replacement.</li>
+          <li>Clearbit was the weakest performer with no unique finds; it adds cost and complexity with zero incremental coverage and should be dropped.</li>
+          <li>For personal emails, People Data Labs outperformed RocketReach (50% vs 41% hit rate). RocketReach found the same emails for fewer people — no additional value for personal enrichment.</li>
+          <li>~20% of accounts returned no contacts — a structural coverage gap to factor into TAM projections.</li>
+        </ul>
+      </div>
+      <div class="mgmt-block">
+        <div class="mgmt-block-title">Recommended toolset</div>
+        <ul class="mgmt-list">
+          <li><strong>Professional email:</strong> Apollo.io (primary) → RocketReach on Apollo misses only. Expected hit rate: 87–94%.</li>
+          <li><strong>Personal email:</strong> People Data Labs only. Expected hit rate: ~50% of identified contacts.</li>
+          <li><strong>Drop:</strong> Clearbit and RocketReach for personal email — both are redundant in the recommended stack.</li>
+        </ul>
+      </div>
+      <div class="mgmt-block">
+        <div class="mgmt-block-title">Scale projection (32,000 accounts)</div>
+        <ul class="mgmt-list">
+          <li>~25,600 accounts expected to yield contacts (based on 80% pilot coverage rate).</li>
+          <li>Estimated ~51,200 contactable people at an average of 2 contacts per account.</li>
+          <li>Negotiate bulk API pricing with Apollo and PDL before full run. Limit RocketReach spend to gap-fill only to control costs.</li>
+        </ul>
+      </div>
+      <div class="mgmt-block">
+        <div class="mgmt-block-title">Next steps before full rollout</div>
+        <ul class="mgmt-list">
+          <li>Validate deliverability of the 3 RocketReach-exclusive work emails from the pilot.</li>
+          <li>Confirm CAN-SPAM compliance posture for personal email outreach.</li>
+          <li>Tag email source in CRM to enable post-send deliverability tracking by tool.</li>
+          <li>Build deduplication layer to prevent duplicate records across tool outputs.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Email Enrichment Pilot · MSP US TAM · 2025</div>
+</div>
+</body>
+</html>
