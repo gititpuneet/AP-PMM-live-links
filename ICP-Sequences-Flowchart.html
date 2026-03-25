@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICP-Specific Email Sequences — ConnectWise PSA & QuickBooks Payments</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #0f1629 0%, #1a1f3a 100%);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 32px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.4px;
+    margin-bottom: 12px;
+  }
+  .header-badges {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .badge-cw { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+  .badge-qbp { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+  /* ── Navigation Tabs ── */
+  .nav-bar {
+    background: #0f1629;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 40px;
+    position: sticky;
+    top: 100px;
+    z-index: 99;
+  }
+  .nav-tabs {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 14px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .nav-tab:hover { color: #94a3b8; }
+  .nav-tab.active { color: #818cf8; border-bottom-color: #818cf8; }
+
+  /* ── Main Content ── */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px 80px;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── Section Titles ── */
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .section-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  /* ── Overview Diagram ── */
+  .overview-container {
+    background: #141929;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .overview-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .overview-box {
+    background: #0f1629;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: center;
+    min-width: 140px;
+  }
+  .overview-box.entry { border-color: rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.05); }
+  .overview-box.decision { border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.05); }
+  .overview-box.cw-path { border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.05); color: #60a5fa; }
+  .overview-box.qbp-path { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); color: #34d399; }
+  .overview-box.general-path { border-color: rgba(168, 85, 247, 0.3); background: rgba(168, 85, 247, 0.05); color: #c084fc; }
+  .overview-arrow {
+    color: #64748b;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* ── Flowchart Container ── */
+  .flow-container {
+    position: relative;
+    padding: 20px 0;
+  }
+
+  /* ── Flow Nodes ── */
+  .flow-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 0;
+    position: relative;
+    flex-wrap: wrap;
+  }
+  .flow-row.branched {
+    gap: 40px;
+  }
+
+  .flow-node {
+    background: #141929;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 18px 22px;
+    width: 280px;
+    position: relative;
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .flow-node:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 24px rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+  }
+  .flow-node.expanded {
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 4px 32px rgba(99, 102, 241, 0.15);
+  }
+  .flow-node.cw-accent:hover { border-color: rgba(59, 130, 246, 0.4); }
+  .flow-node.qbp-accent:hover { border-color: rgba(16, 185, 129, 0.4); }
+
+  .node-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    justify-content: space-between;
+  }
+  .node-step {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .step-email { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
+  .step-branch { background: rgba(251, 191, 36, 0.15); color: #fcd34d; }
+  .step-breakup { background: rgba(156, 163, 175, 0.15); color: #9ca3af; }
+
+  .node-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .node-day {
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  .node-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+  }
+  .node-desc {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  /* ── Word limit badge ── */
+  .word-limit-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 12px;
+    background: rgba(168, 85, 247, 0.12);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    white-space: nowrap;
+  }
+
+  /* ── Expanded email preview ── */
+  .node-preview {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .flow-node.expanded .node-preview { display: block; }
+  .preview-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+  .preview-subject {
+    font-size: 12px;
+    font-weight: 600;
+    color: #818cf8;
+    margin-bottom: 10px;
+    font-style: italic;
+    word-break: break-word;
+  }
+  .preview-body {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.04);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .preview-body::-webkit-scrollbar { width: 4px; }
+  .preview-body::-webkit-scrollbar-track { background: transparent; }
+  .preview-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+  /* ── Connectors ── */
+  .connector {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    height: 40px;
+  }
+  .connector-line {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(99,102,241,0.4), rgba(99,102,241,0.15));
+  }
+
+  .branch-connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    position: relative;
+  }
+  .branch-diamond {
+    width: 40px;
+    height: 40px;
+    background: #1e2540;
+    border: 2px solid #fbbf24;
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .branch-diamond span {
+    transform: rotate(-45deg);
+    font-size: 14px;
+  }
+
+  .branch-labels {
+    display: flex;
+    justify-content: center;
+    gap: 120px;
+    margin-bottom: 12px;
+  }
+  .branch-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  .label-opened { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+  .label-not-opened { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+  .label-converge { background: rgba(156, 163, 175, 0.12); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.25); }
+
+  /* ── Sequence Cards ── */
+  .sequence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .sequence-card {
+    background: #141929;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .sequence-card.cw { border-top: 3px solid #3b82f6; }
+  .sequence-card.qbp { border-top: 3px solid #10b981; }
+
+  .sequence-header {
+    padding: 20px;
+    background: #0f1629;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sequence-letter {
+    font-size: 24px;
+    font-weight: 700;
+    color: #818cf8;
+    margin-bottom: 4px;
+  }
+  .sequence-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+  .sequence-persona {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  .sequence-flow {
+    padding: 20px;
+  }
+  .flow-step {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .flow-step:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .step-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+  .step-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-node {
+    flex: 1;
+    background: #0a0e1a;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .step-node:hover {
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .step-node.expanded {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.05);
+  }
+  .step-node-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+  }
+  .step-node-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .step-node-day {
+    font-size: 10px;
+    color: #64748b;
+  }
+  .step-node-wordcount {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: rgba(168, 85, 247, 0.12);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+  }
+
+  .step-preview {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background: #0a0e1a;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+  }
+  .step-node.expanded ~ .step-preview,
+  .step-node.expanded .step-preview { display: block; }
+
+  .preview-subject {
+    font-size: 11px;
+    font-weight: 600;
+    color: #818cf8;
+    margin-bottom: 8px;
+    font-style: italic;
+    word-break: break-word;
+  }
+  .preview-body {
+    font-size: 10px;
+    color: #94a3b8;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ── Resource Kit ── */
+  .resource-container {
+    display: grid;
+    gap: 24px;
+  }
+  .resource-card {
+    background: #141929;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .resource-card.cw { border-left: 4px solid #3b82f6; }
+  .resource-card.qbp { border-left: 4px solid #10b981; }
+
+  .resource-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .resource-subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 12px;
+  }
+  .resource-url {
+    font-size: 12px;
+    color: #60a5fa;
+    word-break: break-all;
+    margin-bottom: 16px;
+    padding: 10px;
+    background: rgba(59, 130, 246, 0.08);
+    border-left: 2px solid #3b82f6;
+    border-radius: 4px;
+  }
+
+  .resource-section {
+    margin-bottom: 20px;
+  }
+  .resource-section:last-child { margin-bottom: 0; }
+  .section-header {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+  .section-content {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+  .content-list {
+    list-style: none;
+    margin: 8px 0;
+  }
+  .content-list li {
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .content-list li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #64748b;
+  }
+
+  .copy-block {
+    background: #0a0e1a;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 8px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ── Mobile Responsive ── */
+  @media (max-width: 768px) {
+    .header { padding: 20px 20px; }
+    .header h1 { font-size: 20px; }
+    .nav-bar { padding: 0 20px; }
+    .main { padding: 20px 20px 60px; }
+
+    .flow-row { gap: 12px; flex-direction: column; align-items: center; }
+    .flow-row.branched { gap: 12px; }
+    .flow-node { width: 100%; max-width: 280px; }
+
+    .branch-labels { gap: 12px; }
+    .sequence-grid { grid-template-columns: 1fr; }
+    .resource-card { padding: 20px; }
+  }
+
+  /* ── Utility ── */
+  .m-top-32 { margin-top: 32px; }
+  .m-bottom-24 { margin-bottom: 24px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <h1>ICP-Specific Email Sequences</h1>
+    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 12px;">ConnectWise PSA & QuickBooks Payments</p>
+    <div class="header-badges">
+      <span class="badge badge-cw">ConnectWise PSA (Sequences I-L)</span>
+      <span class="badge badge-qbp">QuickBooks Payments (Sequences M-P)</span>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav-bar">
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab('overview')">Overview</div>
+    <div class="nav-tab" onclick="switchTab('connectwise')">ConnectWise Sequences</div>
+    <div class="nav-tab" onclick="switchTab('quickbooks')">QBP Sequences</div>
+    <div class="nav-tab" onclick="switchTab('resources')">Post-Reply Resources</div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- OVERVIEW TAB -->
+  <div class="view active" id="overview">
+    <div class="section-title">Routing Logic</div>
+    <div class="section-subtitle">Lead enters system and routes to the appropriate sequence based on confirmed tool</div>
+
+    <div class="overview-container">
+      <div class="overview-row">
+        <div class="overview-box entry">Lead enters system</div>
+      </div>
+
+      <div class="overview-row">
+        <div class="overview-arrow">↓</div>
+      </div>
+
+      <div class="overview-row">
+        <div class="overview-box decision">Tool identified?</div>
+      </div>
+
+      <div class="overview-row" style="gap: 40px;">
+        <div style="flex: 1;">
+          <div class="overview-box cw-path" style="margin-bottom: 12px;">CW PSA User?</div>
+          <div class="overview-arrow">↓</div>
+          <div class="overview-box cw-path" style="margin-top: 12px;">Sequences I-L<br>(by persona)</div>
+        </div>
+        <div style="flex: 1;">
+          <div class="overview-box qbp-path" style="margin-bottom: 12px;">QBP User?</div>
+          <div class="overview-arrow">↓</div>
+          <div class="overview-box qbp-path" style="margin-top: 12px;">Sequences M-P<br>(by persona)</div>
+        </div>
+        <div style="flex: 1;">
+          <div class="overview-box general-path" style="margin-bottom: 12px;">Not identified?</div>
+          <div class="overview-arrow">↓</div>
+          <div class="overview-box general-path" style="margin-top: 12px;">General Sequences A-H<br>(80% of leads)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title m-top-32">Email Length Guidelines</div>
+    <div class="section-subtitle">All ICP sequences follow the same word count rules as the master framework</div>
+
+    <div style="background: #141929; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <thead>
+          <tr style="background: #0f1629; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <th style="padding: 12px 16px; text-align: left; color: #e2e8f0; font-weight: 700;">Email Stage</th>
+            <th style="padding: 12px 16px; text-align: center; color: #e2e8f0; font-weight: 700;">Max Words</th>
+            <th style="padding: 12px 16px; text-align: left; color: #e2e8f0; font-weight: 700;">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 1 — Pain Opener</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">45</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">One tool-specific pain. One question.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 2A — Social Proof (opened)</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">65</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Tool-specific proof point.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 2B — New Subject (not opened)</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">55</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Same angle, new hook.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 3A — New Angle (opened)</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">60</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Pivot to secondary tool-specific pain.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 3B — Reframe (not opened)</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">40</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Strip to core value prop.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 4A — Value Drop (opened)</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">90</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Stat-heavy, earns the length.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 4B — Hail Mary (not opened)</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">30</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Curiosity one-liner.</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; color: #94a3b8;">Email 5 — Breakup</td>
+            <td style="padding: 12px 16px; text-align: center; color: #a5b4fc;">35</td>
+            <td style="padding: 12px 16px; color: #94a3b8;">Graceful exit. Name-drop customers.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #f87171; border-radius: 4px; padding: 16px; margin-top: 24px;">
+      <div style="font-size: 12px; font-weight: 700; color: #f87171; margin-bottom: 6px;">CRITICAL RULE</div>
+      <div style="font-size: 13px; color: #94a3b8; line-height: 1.6;">No links in any email. Landing pages are AE-only post-reply resources shared during discovery calls.</div>
+    </div>
+  </div>
+
+  <!-- CONNECTWISE SEQUENCES TAB -->
+  <div class="view" id="connectwise">
+    <div class="section-title">ConnectWise PSA User Sequences</div>
+    <div class="section-subtitle">Sequences I-L: Tool-specific messaging targeting MSP personas (Controller, Owner, CFO, AR Specialist)</div>
+
+    <!-- Sequence I -->
+    <div class="sequence-card cw m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">I</div>
+        <div class="sequence-name">ConnectWise MSP — Controller/Finance Manager</div>
+        <div class="sequence-persona">Persona: Financial operations focus • Pain: Reconciliation labor & system fragmentation</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Pain Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Reconciliation question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: ConnectWise + payments at [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Quick question — how many hours does your team spend each month reconciling payments back to ConnectWise? PSA data in one system, payment data in another, and a spreadsheet holding it together.
+
+Is that the setup at [Company]?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — Social Proof / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: Social Proof (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: ConnectWise + payments at [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One data point — a ConnectWise MSP processing ~$80K/month cut month-end close from 7 days to 2 after getting payments to sync bi-directionally with Manage. DSO dropped 11 days in the first quarter.
+
+The difference: payments post back to ConnectWise automatically — no manual matching, no broken records.
+
+If that gap exists at [Company], happy to share how.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Fee Pass-Through / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Fee Pass-Through (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: CC fees on ConnectWise invoices</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Different question — is [Company] absorbing credit card fees on ConnectWise invoices, or passing them through to clients?
+
+Most CW MSPs I talk to absorb $1,500-3,000/month because their billing tool has no compliant pass-through. That's $18-36K/year in recovered margin.
+
+Applies to [Company]?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Value Drop / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Value Drop (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: ConnectWise billing data point</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One stat from ConnectWise MSPs we work with: 70%+ client autopay adoption within 90 days of switching to a billing layer that actually syncs with Manage.
+
+The biggest shift isn't chasing payments — it's that autopay adjusts to fluctuating invoice amounts (seat count changes, project work) without breaking. Clients self-enroll through a branded portal, payments post to ConnectWise automatically, and your team stops doing financial detective work at month-end.
+
+If that would move the needle at [Company], I think we'd have a good conversation.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit + social proof</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: closing the loop</div>
+            <div class="preview-body">{{firstName}} — timing isn't right. If you ever want to see how ConnectWise MSPs like Integris, Valiant, and TeamLogic IT eliminated manual reconciliation, the door is open.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sequence J -->
+    <div class="sequence-card cw m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">J</div>
+        <div class="sequence-name">ConnectWise MSP — CEO/Owner</div>
+        <div class="sequence-persona">Persona: Growth + professionalism • Pain: Client experience gap, scalability</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Pain Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Client experience question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: quick question about [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+I talk to ConnectWise MSP founders every week. One theme keeps surfacing — their PSA is world-class, but the billing experience clients see is clunky.
+
+Is that something you hear from clients at [Company]?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — Peer Proof / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: Peer Proof (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: quick question about [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One ConnectWise MSP founder put it well: "We invested six figures in our PSA but were sending clients a clunky checkout link from our payment tool. It didn't reflect who we are."
+
+After switching to a branded portal that syncs with Manage: 70%+ autopay adoption, month-end close went from 7 days to 2.
+
+Worth hearing more?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Scalability / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Scalability (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: scaling [Company] without adding billing headcount</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Can [Company]'s current ConnectWise billing setup handle 2x the client base without adding another person?
+
+Most CW MSP founders I talk to found the answer was no — their billing layer couldn't keep up with what Manage handled easily. Invoicing, reconciliation, and collections didn't scale.
+
+Worth a conversation?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Customer Story / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Customer Story (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: what ConnectWise MSP founders are saying</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Three quotes from CW MSP founders I've spoken with recently:
+
+"Clients used to complain about billing. Now they compliment it."
+
+"We can 2x revenue without 2x financial ops headcount. The billing layer finally keeps up with the PSA."
+
+"Three separate bills from our old setup. Three support queues. Now it's one vendor, one invoice, and it just works."
+
+If hearing directly from another CW MSP founder would help, I'm happy to connect you. No pitch — just an introduction.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: last note from me</div>
+            <div class="preview-body">{{firstName}} — timing isn't right. If upgrading the ConnectWise billing experience ever becomes a priority, I'm easy to find.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sequence K -->
+    <div class="sequence-card cw m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">K</div>
+        <div class="sequence-name">ConnectWise MSP — CFO</div>
+        <div class="sequence-persona">Persona: Metrics & ROI focus • Pain: DSO visibility, hidden costs</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Metrics Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">DSO visibility question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: [Company]'s DSO + ConnectWise</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Do you have real-time DSO visibility from ConnectWise — or does your team rebuild it from month-old exports?
+
+Most CW MSP CFOs I talk to know the number isn't great but can't see it in real time. Sound familiar?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — ROI Angle / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: ROI Angle (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: [Company]'s DSO + ConnectWise</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Quick math for a ConnectWise MSP processing $50-100K/month: every day of DSO improvement = $1,600-$3,300 in accelerated cash flow. Our average in Q1 was 9 days.
+
+Add recovered CC fees through compliant pass-through ($1,500-3,000/month for most CW MSPs) and eliminated reconciliation labor — payback is typically 3-4 months.
+
+Want the model with [Company]'s numbers? Takes 15 minutes.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Vendor Cost / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Vendor Cost (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: how many bills for billing?</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Different angle — how many separate invoices does [Company] pay each month just to accept payment alongside ConnectWise?
+
+Many CW MSP CFOs I talk to are paying a platform fee, a gateway fee, and a processing fee — three bills from three vendors. That's before reconciliation labor.
+
+Is that your setup?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Delayed Hire / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Delayed Hire (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: the $55K question</div>
+            <div class="preview-body">Hi {{firstName}},
+
+At [Company]'s current growth rate, when will you need another AR person?
+
+ConnectWise MSP CFOs I work with found they could delay that hire by 12-18 months through billing automation that actually syncs with Manage — saving $55K+ in fully-loaded cost while improving DSO. The math: payments post to ConnectWise automatically, autopay handles fluctuating invoices, and compliant CC fee pass-through recovers $1,500-3,000/month in margin.
+
+If you're modeling next year's headcount, this might change the numbers.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit with ROI</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: closing the loop</div>
+            <div class="preview-body">{{firstName}} — timing isn't right. When DSO, ConnectWise billing costs, or AR headcount becomes a priority, I'll be here with the ROI math ready.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sequence L -->
+    <div class="sequence-card cw m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">L</div>
+        <div class="sequence-name">ConnectWise MSP — AR Specialist/Billing Coordinator</div>
+        <div class="sequence-persona">Persona: Operational efficiency • Pain: Manual reconciliation, broken autopay</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Empathy Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Reconciliation spreadsheet question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: ConnectWise + the reconciliation spreadsheet</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Are you still matching payments to ConnectWise agreements by hand — logging into your payment tool, checking the bank, then updating Manage manually?
+
+Most AR specialists at CW MSPs I talk to assumed that's just how it works. Is that the setup at [Company]?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — Social Proof / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: Social Proof (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: ConnectWise + the reconciliation spreadsheet</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One AR specialist at a CW MSP described her old process as "toggling between three systems for every payment" — Manage for invoices, the payment tool for transactions, and a spreadsheet to match them. 10-15 hours a month just on reconciliation.
+
+After automating, payments post to ConnectWise automatically. She got those hours back.
+
+Sound familiar?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Autopay Angle / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Autopay Angle (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: autopay that works with ConnectWise</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Quick question — does your autopay break when ConnectWise invoice amounts change?
+
+That's the #1 complaint I hear from CW MSP billing teams. Fluctuating seat counts or project work mean autopay cancels, and you're manually charging each card.
+
+Autopay that adjusts to fluctuating CW invoices + client self-enrollment. Worth a quick look?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Collections Angle / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Collections (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: collections calls — the worst part of the job?</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Most AR specialists I know hate collections calls. It's awkward, damages client relationships, and rarely works.
+
+What if you never had to make another one — and still got paid faster?
+
+One billing coordinator at a ConnectWise MSP went from chasing 15-20 overdue accounts per month to zero calls. Automated collections with an ~80% recovery rate on 30+ day invoices, all syncing back to Manage without manual updates.
+
+If collections is a pain at [Company], this is worth seeing.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit + empathy</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: last note</div>
+            <div class="preview-body">{{firstName}} — if you ever want to see what ConnectWise billing looks like without the spreadsheets, I'm here. Wishing you a smooth month-end close.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICKBOOKS SEQUENCES TAB -->
+  <div class="view" id="quickbooks">
+    <div class="section-title">QuickBooks Payments User Sequences</div>
+    <div class="section-subtitle">Sequences M-P: Tool-specific messaging targeting accounting firm personas (Owner, CAS Director, CFO, Billing Lead)</div>
+
+    <!-- Sequence M -->
+    <div class="sequence-card qbp m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">M</div>
+        <div class="sequence-name">QBP Accounting — Managing Partner/Owner</div>
+        <div class="sequence-persona">Persona: Revenue impact focus • Pain: Fee absorption, broken autopay, no portal</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Pain Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Fee absorption question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: quick question about QuickBooks Payments at [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Is [Company] absorbing credit card fees through QuickBooks Payments? QBP has no built-in way to pass them through — most firms I talk to are losing $1,500-5,000/month without realizing there's an alternative.
+
+Is that your situation?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — Social Proof / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: Social Proof (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: quick question about QuickBooks Payments at [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One accounting firm switched from QBP and recovered $2,800/month in CC fees through compliant surcharging — same clients, same invoices, just a different payment layer alongside QuickBooks.
+
+They also got 70%+ of CAS clients on autopay (QBP's autopay breaks when amounts change) and cut month-end close from a week to 2 days.
+
+Worth hearing more?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Autopay + Portal / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Autopay + Portal (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: QBP autopay + the portal gap</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Beyond fees — does your QBP autopay break when invoice amounts change? And when clients want to see old invoices, do they email your team because QBP has no portal?
+
+One firm told us they fielded 50-60 invoice lookup emails a month before switching to a self-service client portal.
+
+Sound familiar?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Full Value Drop / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Value Drop (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: what QBP is actually costing [Company]</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Three numbers from firms that switched from QuickBooks Payments:
+
+42% average DSO reduction. Autopay that works + automated collections = clients pay faster.
+
+$2,340/month saved. Compliant surcharging recovers CC fees QBP forces you to absorb.
+
+15 hours/month back. No more manual payment reminders, reconciliation, or fielding "where's my invoice?" emails — a client portal handles it.
+
+You keep invoicing in QuickBooks. The payment layer just gets smarter. If any of those numbers matter to [Company], I think we'd have a good conversation.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: last note from me</div>
+            <div class="preview-body">{{firstName}} — timing isn't right. If QBP's fees, broken autopay, or lack of a client portal ever becomes a priority, I'm easy to find.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sequence N -->
+    <div class="sequence-card qbp m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">N</div>
+        <div class="sequence-name">QBP Accounting — CAS Director / Practice Lead</div>
+        <div class="sequence-persona">Persona: Scale + efficiency • Pain: Multiplied QBP limitations across client books</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Pain Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">CAS scale question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: QuickBooks Payments across client books</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Running CAS across dozens of clients through QBP means no client portal, no real autopay, and CC fees you can't pass through — multiplied across every book.
+
+Is QBP's payment layer holding back [Company]'s CAS practice?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — Social Proof / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: Social Proof (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: QuickBooks Payments across client books</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One CAS director managing 60+ client books through QBP told me: "QBP autopay broke every month because amounts changed. I was manually charging each client's card."
+
+After switching to a payment layer alongside QuickBooks: autopay handles fluctuating amounts, one dashboard replaces logging into QBO separately, and 70%+ of clients enrolled in autopay within 90 days.
+
+Worth sharing how?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Fee Recovery / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Fee Recovery (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: recovering CC fees for your CAS clients</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Different angle — what if you could save each CAS client $1,000-5,000/year by switching their payment processing to one with compliant fee pass-through?
+
+QBP has no surcharging option. A better payment layer alongside QuickBooks does. You become the advisor who found the savings.
+
+Interested in how other CAS practices handle this?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Capacity Benchmark / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Benchmark (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: the 7.4 clients-per-FTE benchmark</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Industry data: median CAS practice manages 7.4 clients per FTE. Top performers manage 10.2.
+
+The difference isn't talent — it's how much billing/collections time is automated vs. manual. QBP forces manual work at every step: broken autopay, no collection workflows, reconciliation by hand across each QBO file.
+
+CAS practices that replace QBP's payment layer (while keeping QuickBooks for invoicing) reclaim 15+ hours/month and push client-per-FTE ratios toward the top tier.
+
+If [Company]'s CAS practice wants to close that gap, I think we'd have a productive conversation.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: closing the loop</div>
+            <div class="preview-body">{{firstName}} — I'll take the hint. If QBP's limitations start holding back your CAS growth, I'm here.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sequence O -->
+    <div class="sequence-card qbp m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">O</div>
+        <div class="sequence-name">QBP Accounting — CFO/Controller</div>
+        <div class="sequence-persona">Persona: Metrics & TCO focus • Pain: Hidden costs, ACH fee hike</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Metrics Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">TCO question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: [Company]'s DSO + QuickBooks Payments</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Do you know what QBP is actually costing [Company] beyond the transaction fees? DSO impact, reconciliation labor, absorbed CC fees — most CFOs I talk to haven't totaled it up.
+
+Have you run that number?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — ROI Angle / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: ROI Angle (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: [Company]'s DSO + QuickBooks Payments</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Quick math — firms that switch from QBP see a 42% average DSO reduction and $2,340/month in recovered CC fees through compliant surcharging. Add eliminated reconciliation labor (QBP forces manual matching) and the payback is typically under 90 days.
+
+You keep invoicing in QuickBooks. The payment layer just gets smarter.
+
+Want the model with [Company]'s numbers?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — ACH Fee Hike / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: ACH Fee Hike (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: QBP's 2026 ACH fee increase</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Are you aware QBP is raising ACH fee caps by over 100% in 2026? Standard caps going from $3 to $5, Enterprise from $7 to $15. For a firm processing $50K+/month in ACH, that's a meaningful hit.
+
+We offer free ACH on all plans. Worth comparing the math?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Full Cost Breakdown / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Cost Breakdown (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: what QBP is costing vs. what it should</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Three line items QBP adds to [Company]'s cost structure that most CFOs don't bucket together:
+
+1. CC fee absorption: $1,500-5,000/month with no pass-through option.
+2. ACH fees: 1% per transaction, cap rising to $25 in 2026. Free elsewhere.
+3. Reconciliation labor: QBP forces manual matching — 10-15 hours/month at loaded cost.
+
+Total hidden cost for a mid-size firm: $4,000-8,000/month. Our flat subscription replaces all three.
+
+If you're evaluating finance ops efficiency this year, the math speaks for itself.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit with ROI</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: closing the loop</div>
+            <div class="preview-body">{{firstName}} — timing isn't right. When QBP's total cost of ownership becomes a priority, I'll be here with the ROI math ready.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sequence P -->
+    <div class="sequence-card qbp m-bottom-24">
+      <div class="sequence-header">
+        <div class="sequence-letter">P</div>
+        <div class="sequence-name">QBP Accounting — Office Manager/Billing Lead</div>
+        <div class="sequence-persona">Persona: Operational efficiency • Pain: Manual work, no portal, broken autopay</div>
+      </div>
+      <div class="sequence-flow">
+        <div class="flow-step">
+          <div class="step-label">Email 1 (Day 0) — Empathy Opener</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Manual work question</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 0</span>
+                <span class="step-node-wordcount">≤45w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: QuickBooks Payments + the manual work</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Are you still sending QBP checkout links, manually chasing payments, and fielding "where's my invoice?" emails because there's no client portal?
+
+Most office managers I talk to assumed that's just how QuickBooks billing works. Is that the setup at [Company]?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 2A/2B (Day 3-4) — Social Proof / New Subject</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">2A: Social Proof (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 3</span>
+                <span class="step-node-wordcount">≤65w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">2B: New Subject (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 4</span>
+                <span class="step-node-wordcount">≤55w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">2A Subject: RE: QuickBooks Payments + the manual work</div>
+            <div class="preview-body">Hi {{firstName}},
+
+One billing lead at a CAS firm told us she fielded 50-60 "where's my invoice?" emails per month because QBP has no client portal. She also manually charged each client's card because QBP autopay broke when amounts changed.
+
+After switching: a client portal handles the emails, autopay actually works, and she saves 15+ hours a month.
+
+Sound familiar?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 3A/3B (Day 7-8) — Autopay Angle / Reframe</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">3A: Autopay Angle (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 7</span>
+                <span class="step-node-wordcount">≤60w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">3B: Reframe (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 8</span>
+                <span class="step-node-wordcount">≤40w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">3A Subject: QBP autopay — does it actually work?</div>
+            <div class="preview-body">Hi {{firstName}},
+
+Quick question — does your QBP autopay break when invoice amounts change?
+
+That's the #1 complaint I hear. CAS billing amounts fluctuate monthly, QBP cancels autopay, and you're manually charging each client's card. One billing manager described it as "autopay that isn't auto."
+
+Working autopay + client self-enrollment. Worth a quick look?
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 4A/4B (Day 14-15) — Collections Angle / Hail Mary</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1; margin-right: 8px;">
+              <div class="step-node-title">4A: Collections (if opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 14</span>
+                <span class="step-node-wordcount">≤90w</span>
+              </div>
+            </div>
+            <div class="step-node" onclick="expandStep(this)" style="flex: 1;">
+              <div class="step-node-title">4B: Hail Mary (if not opened)</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 15</span>
+                <span class="step-node-wordcount">≤30w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">4A Subject: chasing overdue payments without QBP helping</div>
+            <div class="preview-body">Hi {{firstName}},
+
+QBP sends basic reminders. That's it. No escalation rules, no automated sequences, no collections workflow. When a client doesn't pay, you're chasing them manually — phone calls, personal emails, awkward conversations.
+
+One billing manager I work with went from manually tracking overdue accounts to automated collections with an ~80% recovery rate on 30+ day invoices. No phone calls. The system handles escalation, and payments sync back to QuickBooks automatically.
+
+If chasing payments is a pain at [Company], this is worth seeing.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-label">Email 5 (Day 21) — Breakup</div>
+          <div class="step-content">
+            <div class="step-node" onclick="expandStep(this)">
+              <div class="step-node-title">Graceful exit + empathy</div>
+              <div class="step-node-meta">
+                <span class="step-node-day">Day 21</span>
+                <span class="step-node-wordcount">≤35w</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-preview">
+            <div class="preview-subject">Subject: last note</div>
+            <div class="preview-body">{{firstName}} — if you ever want to see what billing looks like beyond QuickBooks Payments (while keeping QuickBooks), I'm here. Wishing you a smooth month-end close.
+
+{{senderFirstName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESOURCES TAB -->
+  <div class="view" id="resources">
+    <div class="section-title">Post-Reply Resource Kit</div>
+    <div class="section-subtitle">AE-only landing pages & copy for post-reply engagement. Never link in cold email.</div>
+
+    <div class="resource-container">
+      <!-- CW Resource -->
+      <div class="resource-card cw">
+        <div class="resource-title">
+          <span style="color: #3b82f6;">●</span> ConnectWise PSA Users
+        </div>
+
+        <div class="resource-subtitle">Landing Page URL</div>
+        <div class="resource-url">https://go.alternativepayments.io/pmm/msp/lp-05-connectwise-billing-alternative</div>
+
+        <div class="resource-section">
+          <div class="section-header">What's on the page:</div>
+          <ul class="content-list">
+            <li>4-way comparison table: AP vs. ConnectBooster vs. WisePay vs. Stripe</li>
+            <li>Customer testimonials from CW MSPs who switched from ConnectBooster</li>
+            <li>KPI highlights: 70%+ autopay adoption, $0 ACH fees, no long-term contracts</li>
+            <li>Integration showcase: ConnectWise Manage, QBO, Autotask, HaloPSA, Sage + 9 more</li>
+            <li>Live demo booking form with ConnectWise-specific data walkthrough</li>
+          </ul>
+        </div>
+
+        <div class="resource-section">
+          <div class="section-header">When to share:</div>
+          <div class="section-content">After the first positive reply, in the AE's response email or during the discovery call. Frame it as context before the conversation, not a solo asset.</div>
+        </div>
+
+        <div class="resource-section">
+          <div class="section-header">Suggested AE Copy:</div>
+          <div class="copy-block">I put together a page that walks through how Alternative Payments runs inside ConnectWise — comparison data, results from MSPs who switched, and integration details. Here it is: [link]
+
+Worth a look before our call, but no pressure — we'll cover everything live.</div>
+        </div>
+      </div>
+
+      <!-- QBP Resource -->
+      <div class="resource-card qbp">
+        <div class="resource-title">
+          <span style="color: #10b981;">●</span> QuickBooks Payments Users
+        </div>
+
+        <div class="resource-subtitle">Landing Page URL</div>
+        <div class="resource-url">https://go.alternativepayments.io/pmm/accounting/lp-11-quickbooks-payments-alternative</div>
+
+        <div class="resource-section">
+          <div class="section-header">What's on the page:</div>
+          <ul class="content-list">
+            <li>Pain point breakdown: fee absorption (2.9%+$0.30), broken autopay, no portal, no collections</li>
+            <li>Feature comparison: AP vs. QBP (8 categories)</li>
+            <li>Results: 42% DSO reduction, $2,340/mo savings, 15 hrs/mo saved</li>
+            <li>Customer testimonial from QBP switcher</li>
+            <li>3-step onboarding: Connect QB → Import → Start getting paid</li>
+            <li>Live demo booking form</li>
+          </ul>
+        </div>
+
+        <div class="resource-section">
+          <div class="section-header">When to share:</div>
+          <div class="section-content">After the first positive reply, in the AE's response email or during the discovery call. Always emphasize: "You keep invoicing in QuickBooks. We just upgrade the payment layer."</div>
+        </div>
+
+        <div class="resource-section">
+          <div class="section-header">Suggested AE Copy:</div>
+          <div class="copy-block">Here's a page that breaks down exactly how Alternative Payments works alongside QuickBooks — what you gain, what stays the same, and results from firms that switched from QBP: [link]
+
+Quick read before our call, or we can walk through it together.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resource-card" style="background: rgba(99, 102, 241, 0.08); border-left: 4px solid #818cf8; margin-top: 32px;">
+      <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px;">General Guidelines for All LP Sharing</div>
+      <ul class="content-list" style="color: #94a3b8;">
+        <li><strong>Never share in cold email</strong> — these are post-reply assets only</li>
+        <li><strong>Always add context</strong> — never send a bare link. Frame why it's relevant.</li>
+        <li><strong>Time it right</strong> — share after the first positive reply or during discovery call scheduling, not after demo</li>
+        <li><strong>Track it</strong> — log in HubSpot when the LP link is shared for deal progression correlation</li>
+        <li><strong>Don't over-rely on it</strong> — the landing page supports the conversation, it doesn't replace it</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(tab) {
+  // Hide all views
+  const views = document.querySelectorAll('.view');
+  views.forEach(view => view.classList.remove('active'));
+
+  // Remove active from all tabs
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+
+  // Show selected view and mark tab active
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+
+  // Scroll to top
+  window.scrollTo(0, 150);
+}
+
+function expandStep(element) {
+  // Only expand if clicking directly on the node, not on child elements
+  if (element.classList.contains('step-node')) {
+    element.classList.toggle('expanded');
+  }
+}
+</script>
+
+</body>
+</html>
